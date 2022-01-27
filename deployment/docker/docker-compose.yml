@@ -1,0 +1,15 @@
+services:
+  monosi-api:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.api
+    image: monosi-api
+  monosi-client:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.client
+    image: monosi-client
+    environment:
+      - REACT_APP_API_URL=http://0.0.0.0:3000/v1/api/
+    ports:
+      - "3000:80"
