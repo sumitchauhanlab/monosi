@@ -13,7 +13,7 @@ sys.path.append(path)
 def create_app():
     # Initialize Server
     app = Flask(__name__)
-    CORS(app, resources={r"/v1/api/*": {"origins": "*"}}) # TODO: Check allow all origins?
+    CORS(app, resources={r"/v1/api/*": {"origins": "*"}})
     app_settings = os.getenv(
         'APP_SETTINGS',
         'server.config.Config'
