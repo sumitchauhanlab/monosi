@@ -1,14 +1,18 @@
 import React from 'react';
 
-// import CreateIntegrationFlyout from 'components/CreateIntegrationFlyout';
+import IntegrationForm from 'components/forms/IntegrationForm';
+import Flyout from 'components/Flyout';
 import SettingsPage from 'components/SettingsPage';
+
 import IntegrationsTable from './components/IntegrationsTable';
 
 const IntegrationsSettings: React.FC = () => {
+    let flyout = <Flyout name="Data Source" form={<IntegrationForm />} />
+
     return (
         <SettingsPage
             title="Integrations"
-            // rightSideItems={[<CreateIntegrationFlyout />]}
+            rightSideItems={[flyout]}
             >
             <IntegrationsTable />
         </SettingsPage>

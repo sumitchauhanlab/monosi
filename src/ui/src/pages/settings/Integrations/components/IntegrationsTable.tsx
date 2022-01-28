@@ -10,6 +10,8 @@ import {
 
 import IntegrationService from 'services/integrations';
 
+// TODO: Abstract component for integrations and datasources tables.
+
 const IntegrationsTable: React.FC = () => {
   const [itemIdToOpenActionsPopoverMap, setItemIdToOpenActionsPopoverMap] =
     useState<{ [key: string]: boolean }>({});
@@ -39,6 +41,7 @@ const IntegrationsTable: React.FC = () => {
         setMessage(emptyState);
       }
     }
+
     loadIntegrations();
   }, []);
 
