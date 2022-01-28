@@ -11,10 +11,15 @@ class Schedule:
 	type: ScheduleType = ScheduleType.INTERVAL
 
 @dataclass
+class Configuration:
+	pass
+
+@dataclass
 class MonitorDefinition:
 	name: str
 	description: Optional[str]
 	enabled: Optional[bool]
+	configuration: Configuration
 	# schedule: Schedule
 
 	def to_dict(self):
@@ -22,3 +27,8 @@ class MonitorDefinition:
 			"name": self.name,
 		}
 
+	@classmethod
+	def from_dict(cls, monitor_dict):
+		return cls(
+			**monitor_dict
+		)

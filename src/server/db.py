@@ -1,6 +1,6 @@
 from flask_sqlalchemy import BaseQuery, SQLAlchemy
 
-from .models.base import Base
+from .models import Base
 
 class MsiQuery(BaseQuery):
     def get_by_id(cls, ident, default=None):

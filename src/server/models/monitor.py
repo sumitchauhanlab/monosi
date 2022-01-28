@@ -3,13 +3,14 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table, Text, 
 
 from monitor.models.base import MonitorDefinition
 
-from .base import Base, mapper_registry
+from . import Base, mapper_registry
+from .base import CrudMixin
 
 # TODO: Is this necessary? Is it actually mapped?
 # @mapper_registry.mapped
 
 @dataclass
-class Monitor(MonitorDefinition, Base):
+class Monitor(MonitorDefinition, Base, CrudMixin):
     # TODO: Abstract id, created_at, updated_at
     __table__ = Table(
         "monitor",
@@ -19,6 +20,7 @@ class Monitor(MonitorDefinition, Base):
         Column("name", String(50)),
         Column("description", Text),
         Column("enabled", Boolean),
+        Column("configuration", Text), # TODO: Better way to not store JSON-style configuration?
         # Column("schedule", Text), # TODO: Figure out nested dataclass
 
         # TODO: Add updated_on fn

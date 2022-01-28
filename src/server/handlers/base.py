@@ -21,7 +21,7 @@ class ListResource(BaseResource):
         # self.resource.validate(req)
 
     def get(self):
-        obj_list = self.resource.query.all()
+        obj_list = self.resource.all()
         obj_dict_list = [obj.to_dict() for obj in obj_list]
 
         return {self.key: obj_dict_list}
@@ -49,10 +49,12 @@ class CrudResource(BaseResource):
         return obj
 
     def _validate(self, req):
-        return self.resource.validate(req)
+        pass
+        # return self.resource.validate(req)
 
     def get(self, obj_id):
         obj = self._retrieve_by_id(obj_id)
+
         return {self.key: obj.to_dict()}
 
     def put(self, obj_id):
@@ -60,6 +62,7 @@ class CrudResource(BaseResource):
 
         req = request.get_json(force=True)
         self._validate(req)
+        
         try:
             obj.update(req)
         except Exception as e:
@@ -78,4 +81,3 @@ class CrudResource(BaseResource):
             abort(500)
 
         return {self.key: obj.to_dict()}
-
