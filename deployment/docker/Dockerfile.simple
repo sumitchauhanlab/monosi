@@ -2,24 +2,26 @@ FROM node:16-alpine as build-step
 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY ./client/tsconfig.json ./client/yarn.lock ./client/package.json ./
-COPY ./client/src ./src
-COPY ./client/public ./public
+COPY ./src/ui/tsconfig.json ./src/ui/yarn.lock ./src/ui/package.json ./
+COPY ./src/ui/src ./src
+COPY ./src/ui/public ./public
 RUN yarn
 RUN yarn build
 
 # Build step #2: build the API with the client as static files
 FROM --platform=linux/x86-64 python:3.9
 WORKDIR /app
-RUN mkdir ./client
-COPY --from=build-step /app/build ./client/build
 
-RUN mkdir ./api
-COPY ./requirements.txt ./api/requirements.txt
-COPY ./src ./api
-RUN pip install -r ./api/requirements.txt
+COPY ./requirements.api.txt ./requirements.txt
+COPY ./src ./
+RUN pip install -r ./requirements.txt
 ENV FLASK_ENV production
+ENV SERVE_UI 1
+
+RUN rm -rf ./ui
+RUN mkdir ./ui
+COPY --from=build-step /app/build ./server/ui/build
 
 EXPOSE 3000
-WORKDIR /app/api
-CMD ["gunicorn", "-b", ":3000", "monosi.wsgi:app"]
+WORKDIR /app
+CMD ["gunicorn", "-b", ":3000", "server.wsgi:app"]
