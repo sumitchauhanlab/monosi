@@ -22,6 +22,10 @@ class MonitorDefinition:
 	configuration: Configuration
 	# schedule: Schedule
 
+	@classmethod
+	def validate(cls, monitor_dict):
+		pass
+
 	def to_dict(self):
 		return {
 			"name": self.name,
