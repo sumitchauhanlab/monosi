@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table, Text, func
 
-from monitor.models.base import MonitorDefinition
+from core.monitor.models.base import MonitorDefinition
 
 from . import Base, mapper_registry
 from .base import CrudMixin

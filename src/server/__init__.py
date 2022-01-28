@@ -6,13 +6,6 @@ import sys
 from .db import db
 from .api import MsiApi
 
-
-# Add all monosi modules to PYTHON_PATH
-cur_dir_path = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join('../', cur_dir_path)
-sys.path.append(path)
-
-
 def _build_path():
     build_path = os.path.join(path, 'ui/build/')
     if not os.path.exists(build_path):

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from monitor.models.base import MonitorDefinition
+from core.monitor.models.base import MonitorDefinition
 
 from .config import Configuration
 from .parsers.monitors import MonitorParser

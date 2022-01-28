@@ -36,7 +36,7 @@ setup(
     url='https://github.com/monosidev/monosi',
     license=license,
     install_requires=install_requires,
-    packages=find_packages(where="src", include=["monitor*", "cli*", "server*"]),
+    packages=find_packages(where="src", include=["agent*", "cli*", "core*", "scheduler*" "server*"]),
     package_dir={"": "src"},
     entry_points = {
         'console_scripts': [

@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from monitor.models.base import MonitorDefinition
+from core.monitor.models.base import MonitorDefinition
 from cli.utils.files import File
 
 from . import YamlParser
