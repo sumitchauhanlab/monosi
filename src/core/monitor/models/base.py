@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
+import core.monitor.tasks as tasks
+
 class ScheduleType(Enum):
 	INTERVAL = 'interval'
 
@@ -36,3 +38,14 @@ class MonitorDefinition:
 		return cls(
 			**monitor_dict
 		)
+
+
+@dataclass
+class Monitor:
+    def run(self):
+        return tasks.RunMonitorTask(self).run()
+
+    @classmethod
+    def from_definition(cls, definition: MonitorDefinition):
+    	return cls()
+
