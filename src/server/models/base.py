@@ -5,7 +5,6 @@ from server.db import db
 # class BaseModel(Base):
 #     query_class = MsiQuery
 
-
 class CrudMixin(object):
     # id = Column(Integer, primary_key=True)
     # updated_at = Column(DateTime(timezone=True), nullable=False, default=func.now())

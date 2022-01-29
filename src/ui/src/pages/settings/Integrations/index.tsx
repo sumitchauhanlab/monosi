@@ -7,7 +7,7 @@ import SettingsPage from 'components/SettingsPage';
 import IntegrationsTable from './components/IntegrationsTable';
 
 const IntegrationsSettings: React.FC = () => {
-    let flyout = <Flyout name="Data Source" form={<IntegrationForm />} />
+    let flyout = <Flyout name="Integration" form={<IntegrationForm />} />
 
     return (
         <SettingsPage

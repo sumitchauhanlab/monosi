@@ -85,7 +85,7 @@ const IntegrationsTable: React.FC = () => {
       name: 'Name',
     },
     {
-      field: 'integration_type',
+      field: 'type',
       name: 'Integration Type',
     },
     {
