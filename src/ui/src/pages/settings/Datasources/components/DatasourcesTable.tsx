@@ -45,7 +45,7 @@ const DatasourcesTable: React.FC = () => {
       name: 'Name',
     },
     {
-      field: 'source_type',
+      field: 'type',
       name: 'Connection Type',
     },
     {

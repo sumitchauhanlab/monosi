@@ -32,7 +32,7 @@ const WarehouseForm = () => {
   const submitForm = async () => {
     const body = {
       name: datasourceName,
-      source_type: datasourceType,
+      type: datasourceType,
       configuration: {
         driver: datasourceType,
         account: account,

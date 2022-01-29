@@ -17,5 +17,5 @@ class IntegrationResource(CrudResource):
 
     @property
     def key(self):
-        return "integrations"
+        return "integration"
 
