@@ -1,4 +1,4 @@
-import common.drivers.snowflake
+import core.common.drivers.snowflake
 
 from . import DriverConfig
 
@@ -6,13 +6,13 @@ class DriverFactory:
     def __init__(self):
         self._drivers = {}
 
-        self._drivers['snowflake'] = common.drivers.snowflake
+        self._drivers['snowflake'] = core.common.drivers.snowflake
         # for entry_point in pkg_resources.iter_entry_points('monosi_drivers'):
         #     self._drivers[entry_point.name] = entry_point.load()
 
     def load_config_class(self, name: str):
         if name not in self._drivers.keys():
-            raise Exception
+            raise Exception("Could not find driver specified: {}".format(name))
 
         return self._retrieve_driver_class(name, 'DriverConfig')
 

@@ -2,37 +2,36 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple
 import os
 
+from core.common.drivers import DriverConfig
+from core.common.drivers.factory import load_config
+
 from cli.utils.files import file_find
 import cli.utils.yaml as yaml
 
-class DatasourceConfig(object):
-    pass
 
 DEFAULT_WORKSPACES_DIR = os.path.expanduser('~/.monosi')
 
 @dataclass
 class WorkspaceConfiguration:
-    sources: Dict[str, DatasourceConfig] = field(default_factory=list())
+    sources: Dict[str, DriverConfig] = field(default_factory=list())
     name: str = "default"
     workspaces_dir: str = DEFAULT_WORKSPACES_DIR # TODO: Update to args
     
-    @staticmethod
-    def _config_from_source(source_dict: Dict[str, Any]):
-        # from monosi.drivers.factory import load_config
+    @classmethod
+    def _config_from_source(cls, source_dict: Dict[str, Any]):
+        from core.common.drivers.factory import load_config
 
-        # if 'type' not in source_dict:
-        #     raise Exception("Source type is required.")
+        if 'type' not in source_dict:
+            raise Exception("Source type is required.")
 
-        # driver_type = source_dict.pop('type')
-        # try:
-        #     cls = load_config(driver_type)
-        #     data = cls.retrieve_data(source_dict)
-        #     cls.validate(data)
-        #     config = cls.from_dict(data)
-        # except Exception as e:
-        #     raise e
+        driver_type = source_dict.pop('type')
+        try:
+            cls = load_config(driver_type)
+            # cls.validate(data)
+            config = cls.from_dict(source_dict)
+        except Exception as e:
+            raise e
 
-        config = DatasourceConfig()
         return config
 
     def validate(self):
@@ -42,9 +41,9 @@ class WorkspaceConfiguration:
     def from_dict(cls, workspace_dict: Dict[str, Any], source_name: str = 'default'):
         sources = {}
         if 'sources' in workspace_dict:
-            for source in workspace_dict['sources']:
-                source = cls._config_from_source(source)
-                sources['default'] = source
+            for source_name in workspace_dict['sources'].keys():
+                source = cls._config_from_source(workspace_dict['sources'][source_name])
+                sources[source_name] = source
 
         return cls(
             sources=sources,
@@ -70,7 +69,6 @@ class WorkspaceConfiguration:
         workspace_dict = cls._get_workspace_dict(workspace_name, all_workspaces_dict)
 
         return cls.from_dict(workspace_dict)
-
 
 @dataclass 
 class ProjectConfiguration:
@@ -124,7 +122,6 @@ class ProjectConfiguration:
         )
 
         return project
-
 
 
 @dataclass
@@ -206,3 +203,8 @@ class Configuration(WorkspaceConfiguration, ProjectConfiguration):
 
             yaml.write_file(project_config_path, project_dict)
 
+    def get_driver_config(self, source_name: str):
+        if source_name not in self.sources.keys():
+            raise Exception("Source {} was not defined or can not be found.")
+
+        return self.sources[source_name]

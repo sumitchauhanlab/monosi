@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import Any, List, Type
 
 import snowflake.connector
 
-from common.drivers import BaseDriver
-from common.drivers.column import Column, ColumnDataType
+from core.common.drivers import BaseDriver
+from core.common.drivers.dialect import Dialect
+from core.common.drivers.column import Column, ColumnDataType
 
 from .dialect import SnowflakeDialect
 from .configuration import SnowflakeConfiguration
@@ -40,7 +41,7 @@ def resolve_to_type_from_str(type_str):
 @dataclass
 class SnowflakeDriver(BaseDriver):
     config: SnowflakeConfiguration
-    _instance: Any # TODO: Snowflake class
+    _instance: Any = None # TODO: Snowflake class
     dialect: Type[Dialect] = SnowflakeDialect
 
     def _before_execute(self, cs):
@@ -81,6 +82,17 @@ class SnowflakeDriver(BaseDriver):
         return columns
 
     def execute_sql(self, sql, **params):
+        if not self._instance: #TODO : Reconnect if disconnected
+            try:
+                connection_details = self.config.to_dict()
+                self._instance = snowflake.connector.connect(
+                    **connection_details
+                )
+                # track_event(self.config, action="database_connection_success", label="snowflake")
+            except Exception as e:
+                pass
+                # track_event(self.config, action="database_connection_fail", label="snowflake")
+
         cs = self._instance.cursor()
         results = []
         try:

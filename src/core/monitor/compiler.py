@@ -1,25 +1,31 @@
 from dataclasses import dataclass
 from typing import Any, List
 
+from core.common.drivers.column import Table
+from core.common.drivers.dialect import Dialect
 
-from common.configuration import Configuration
-
-from monitor.models.base import Monitor, MetricBase
-from monitor.models.table import TableMonitor, ColumnMetric, ColumnMetricType
-from monitor.models.custom import CustomMetric
-
-from common.drivers.column import Table
-from common.drivers.dialect import Dialect
-
+from core.monitor.models.metrics import MetricBase
+from core.monitor.models.table import TableMonitor, ColumnMetric, ColumnMetricType
 
 @dataclass
 class Compiler:
     dialect: Dialect
     metadata: Any
 
-    def __init__(self, config):
-    	self.metadata = config.metadata
-    	self.dialect = config.dialect
+    @staticmethod
+    def _driver(config):
+        try:
+            from core.common.drivers.factory import load_driver
+            driver_cls = load_driver(config)
+
+            return driver_cls(config)
+        except:
+            raise Exception("Could not initialize connection to database in runner.")
+
+    def __init__(self, driver_config):
+        driver = self._driver(driver_config)
+        self.metadata = driver.metadata()
+        self.dialect = driver.dialect
 
     def compile_metric(self, metric: MetricBase):
         return metric.compile(self.dialect)
@@ -38,7 +44,7 @@ class Compiler:
             if table.name.lower() in monitor.table:
                 monitor.columns = table.columns
 
-    def compile(self, monitor: Monitor):
+    def compile(self, monitor):
         if isinstance(monitor, TableMonitor):
             self._add_cols(monitor)
 

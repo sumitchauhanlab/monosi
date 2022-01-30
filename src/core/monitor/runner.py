@@ -9,7 +9,7 @@ class Runner:
 
     def _initialize(self):
         try:
-            from common.drivers.factory import load_driver
+            from core.common.drivers.factory import load_driver
             driver_cls = load_driver(self.config)
 
             self.driver = driver_cls(self.config)

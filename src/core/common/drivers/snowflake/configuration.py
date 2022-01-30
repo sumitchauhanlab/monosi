@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from common.drivers import DriverConfig
+from core.common.drivers import DriverConfig
 
 @dataclass
 class SnowflakeConfiguration(DriverConfig):

@@ -1,4 +1,4 @@
-from monosi.drivers.dialect import GenericDialect
+from core.common.drivers.dialect import GenericDialect
 
 class SnowflakeDialect(GenericDialect):
     @classmethod

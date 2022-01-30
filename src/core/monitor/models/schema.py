@@ -1,8 +1,8 @@
-from dataclasses import dataclass
-from typing import List, Optional
+# from dataclasses import dataclass
+# from typing import List, Optional
 
-from .base import MonitorDefinition
+# from .base import MonitorDefinition
 
-class SchemaMonitorDefinition(MonitorDefinition):
-	table: str
-	columns: Optional[List[str]]
+# class SchemaMonitorDefinition(MonitorDefinition):
+# 	table: str
+# 	columns: Optional[List[str]]

@@ -1,9 +1,17 @@
 from typing import Iterable
 
 from core.monitor.models.base import MonitorDefinition
+from core.monitor.models.table import TableMonitorDefinition
 from cli.utils.files import File
 
 from . import YamlParser
+
+def monitor_definition_factory(monitor_dict):
+    monitor_type = monitor_dict.pop('type')
+    if monitor_type == 'table':
+        return TableMonitorDefinition
+
+    raise Exception("Could not find monitor type: {}".format(monitor_type))
 
 class MonitorParser(YamlParser):
     def __init__(self, configuration):
@@ -14,8 +22,9 @@ class MonitorParser(YamlParser):
 
         for monitor_dict in monitors_dict:
             try:
-                MonitorDefinition.validate(monitor_dict)
-                monitor = MonitorDefinition.from_dict(monitor_dict)
+                monitor_def_class = monitor_definition_factory(monitor_dict)
+                monitor_def_class.validate(monitor_dict)
+                monitor = monitor_def_class.from_dict(monitor_dict)
             except Exception as e:
                 raise e
             yield monitor

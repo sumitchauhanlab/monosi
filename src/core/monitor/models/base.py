@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from core.monitor.tasks.run import RunMonitorTask
+from core.common.drivers import DriverConfig
 
 class ScheduleType(Enum):
 	INTERVAL = 'interval'
@@ -13,7 +13,7 @@ class Schedule:
 	type: ScheduleType = ScheduleType.INTERVAL
 
 @dataclass
-class Configuration:
+class MonitorConfiguration:
 	pass
 
 # TODO: It's likely that a monitor definition
@@ -25,7 +25,9 @@ class MonitorDefinition:
 	name: str
 	description: Optional[str]
 	enabled: Optional[bool]
-	configuration: Configuration # TODO
+	# workspace: str
+	configuration: MonitorConfiguration # TODO (This is NOT a connection configuration, it is the details for the individ monitor)
+	source: str = 'default' # Used (with workspace) to resolve the DriverConfig
 	# schedule: Schedule
 
 	@classmethod
@@ -35,6 +37,7 @@ class MonitorDefinition:
 	def to_dict(self):
 		return {
 			"name": self.name,
+			"source": self.source,
 		}
 
 	@classmethod
@@ -43,22 +46,34 @@ class MonitorDefinition:
 			**monitor_dict
 		)
 
+	def to_monitor(self, workspace):
+		return Monitor.from_definition(self, workspace)
+
 @dataclass
 class Monitor:
 	name: str
 	description: Optional[str]
 	enabled: bool
-	# configuration: DriverConfig
+	driver_config: DriverConfig
 	# type via polymorphism
 
 	def run(self):
+		from core.monitor.tasks.run import RunMonitorTask
+
 		return RunMonitorTask(self).run()
 
 	@classmethod
-	def from_definition(cls, definition: MonitorDefinition):
+	def from_definition(cls, definition: MonitorDefinition, workspace):
+		# MonitorDefinition.validate(definition) # TOOD:  validate the definition
+		driver_config = workspace.get_driver_config(definition.source)
+		
 		return cls(
 			name=definition.name,
 			description=definition.description,
 			enabled=definition.enabled,
+			driver_config=driver_config,
 		)
+
+	def retrieve_metrics(self):
+		raise NotImplementedError
 

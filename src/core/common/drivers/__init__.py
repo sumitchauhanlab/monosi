@@ -7,6 +7,7 @@ from .dialect import Dialect
 
 @dataclass
 class DriverConfig:
+    name: str = "default" # TODO: Force naming
     schema: Optional[str] = None
     database: Optional[str] = None
 

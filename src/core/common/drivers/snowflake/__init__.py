@@ -1,2 +1,2 @@
-from .configuration import SnowflakeConfig as DriverConfig
-from .configuration import SnowflakeDriver as Driver
+from .configuration import SnowflakeConfiguration as DriverConfig
+from .driver import SnowflakeDriver as Driver
