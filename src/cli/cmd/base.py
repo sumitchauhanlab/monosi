@@ -27,7 +27,7 @@ class TaskBase:
     def run(self, *args, **kwargs):
         raise NotImplementedError('Implementation for task does not exist.')
 
-class ProjectTask(TaskBase):
+class BaseCmd(TaskBase):
     def __init__(self, args, config):
         super().__init__(args, config)
         self.project: Optional[Project] = None

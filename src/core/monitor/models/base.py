@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-import core.monitor.tasks as tasks
+from core.monitor.tasks.run import RunMonitorTask
 
 class ScheduleType(Enum):
 	INTERVAL = 'interval'
@@ -16,12 +16,16 @@ class Schedule:
 class Configuration:
 	pass
 
+# TODO: It's likely that a monitor definition
+# will have to include information about which
+# datasource it is intended to run on and a
+# way to grab its configuration information
 @dataclass
 class MonitorDefinition:
 	name: str
 	description: Optional[str]
 	enabled: Optional[bool]
-	configuration: Configuration
+	configuration: Configuration # TODO
 	# schedule: Schedule
 
 	@classmethod
@@ -39,13 +43,22 @@ class MonitorDefinition:
 			**monitor_dict
 		)
 
-
 @dataclass
 class Monitor:
-    def run(self):
-        return tasks.RunMonitorTask(self).run()
+	name: str
+	description: Optional[str]
+	enabled: bool
+	# configuration: DriverConfig
+	# type via polymorphism
 
-    @classmethod
-    def from_definition(cls, definition: MonitorDefinition):
-    	return cls()
+	def run(self):
+		return RunMonitorTask(self).run()
+
+	@classmethod
+	def from_definition(cls, definition: MonitorDefinition):
+		return cls(
+			name=definition.name,
+			description=definition.description,
+			enabled=definition.enabled,
+		)
 

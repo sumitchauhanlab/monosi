@@ -3,6 +3,8 @@ from flask_cors import CORS
 import os
 import sys
 
+from scheduler.manager import JobManager
+
 from .db import db
 from .api import MsiApi
 
@@ -41,7 +43,11 @@ def create_app():
     )
     app.config.from_object(app_settings)
 
+    # Initialize UI if SERVE_UI
     _init_ui(app)
+
+    # Initialize scheduler process
+    JobManager(app)
 
     # Initialize DB
     db.init_app(app)

@@ -18,4 +18,3 @@ class MonitorResource(CrudResource):
     @property
     def key(self):
         return "monitor"
-

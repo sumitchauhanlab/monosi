@@ -1,25 +1,10 @@
-from .base import ProjectTask, TaskBase
+from core.monitor.models.base import Monitor
 
-class PrintMonitorDefinitionTask(TaskBase):
-    def __init__(self, args, config, monitor):
-        super().__init__(args, config)
-        self.monitor = monitor
+from .base import BaseCmd
 
-    def run(self, *args, **kwargs):
-        print(self.monitor.to_dict())
-
-class MonitorsTask(ProjectTask):        
+class RunCmd(BaseCmd):
     def _create_tasks(self):
-        tasks = []
-        for monitor in self.project.monitors:
-            task = PrintMonitorDefinitionTask(
-                args=self.args,
-                config=self.config,
-                monitor=monitor,
-            )
-            tasks.append(task)
-
-        return tasks
+        return [Monitor.from_definition(monitor) for monitor in self.project.monitors]
 
     def _process_tasks(self):
         results = [task.run() for task in self.task_queue]

@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import os
 import sys
 
-from .cmd.run import MonitorsTask
+from .cmd.run import RunCmd
 
 # Add other modules to PYTHON_PATH
 path = os.path.abspath('../')
@@ -38,7 +38,7 @@ class CliParser(object):
 
     def run(self, args):
         args = None
-        task = MonitorsTask.from_args(args)
+        task = RunCmd.from_args(args)
         task.run()
 
 def get_installation_info():

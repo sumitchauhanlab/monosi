@@ -12,6 +12,7 @@ class BaseConfig:
     SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + monosi_home_dir() + "/sqlite.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SERVE_UI = bool(os.getenv('SERVE_UI', False))
 
 class DevelopmentConfig(BaseConfig):
