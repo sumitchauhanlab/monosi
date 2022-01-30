@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import json
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table, Text, func
 
+from core.common.drivers import DriverDefinition
+
 from . import Base, mapper_registry
 from .base import CrudMixin
 
@@ -30,14 +32,13 @@ class TempDatasourceDefinition:
 # @mapper_registry.mapped
 
 @dataclass
-class Datasource(TempDatasourceDefinition, Base, CrudMixin):
+class Datasource(DriverDefinition, Base, CrudMixin):
     # TODO: Abstract id, created_at, updated_at
     __table__ = Table(
         "datasource",
         mapper_registry.metadata,
         Column("id", Integer, primary_key=True),
-
-        Column("name", String(50), primary_key=True),
+        Column("name", String(50)),
         Column("type", String(50)), # TODO: Enum
         Column("configuration", Text), # TODO: Better way to not store JSON-style configuration?
 

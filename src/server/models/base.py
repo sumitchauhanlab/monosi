@@ -23,30 +23,31 @@ class CrudMixin(object):
 
     @classmethod
     def all(cls):
-    	try:
-    		return cls.query.all()
-    	except:
-    		raise Exception("DB: Couldn't query all records")
+        try:
+            return cls.query.all()
+        except:
+            raise Exception("DB: Couldn't query all records")
 
     def create(self):
-    	try:
-    		db.session.add(self)
-    		db.session.commit()
-    	except Exception as e:
-    		raise Exception("DB: Couldn't persist record")
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            raise Exception("DB: Couldn't persist record")
 
     def update(self, updates):
-    	try:
-	        for k, v in updates.items():
-	            setattr(self, k, v)
-	        db.session.commit()
-    	except Exception as e:
-    		raise Exception("DB: Couldn't update record")
+        try:
+            for k, v in updates.items():
+                setattr(self, k, v)
+            db.session.commit()
+        except Exception as e:
+            raise Exception("DB: Couldn't update record")
 
     def delete(self):
-    	try:
-    		db.session.delete(self)
-    		db.session.commit()
-    	except:
-    		ra
-    		raise Exception("DB: Couldn't delete record")
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            ra
+            raise Exception("DB: Couldn't delete record")

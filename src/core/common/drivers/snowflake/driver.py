@@ -90,7 +90,7 @@ class SnowflakeDriver(BaseDriver):
                 )
                 # track_event(self.config, action="database_connection_success", label="snowflake")
             except Exception as e:
-                pass
+                raise e
                 # track_event(self.config, action="database_connection_fail", label="snowflake")
 
         cs = self._instance.cursor()

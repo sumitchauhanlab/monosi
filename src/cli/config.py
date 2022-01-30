@@ -38,7 +38,7 @@ class WorkspaceConfiguration:
         pass
 
     @classmethod
-    def from_dict(cls, workspace_dict: Dict[str, Any], source_name: str = 'default'):
+    def from_dict(cls, workspace_dict: Dict[str, Any]):
         sources = {}
         if 'sources' in workspace_dict:
             for source_name in workspace_dict['sources'].keys():

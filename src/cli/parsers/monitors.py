@@ -1,13 +1,14 @@
 from typing import Iterable
 
-from core.monitor.models.base import MonitorDefinition
+from core.monitor.models import MonitorDefinition
 from core.monitor.models.table import TableMonitorDefinition
 from cli.utils.files import File
 
 from . import YamlParser
 
+# TODO: Replace with configuration object
 def monitor_definition_factory(monitor_dict):
-    monitor_type = monitor_dict.pop('type')
+    monitor_type = monitor_dict['type']
     if monitor_type == 'table':
         return TableMonitorDefinition
 

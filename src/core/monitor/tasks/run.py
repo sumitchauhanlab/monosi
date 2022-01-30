@@ -37,7 +37,6 @@ class RunMonitorTask:
         compiled_sql = self._compile()
         runner_results = self._run(compiled_sql)
         # analysis = self._analyze(runner_results)
-
         return runner_results
 
         # return (runner_results, analysis)

@@ -25,8 +25,8 @@ class DriverConfig:
     def driver_name(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def retrieve_data(self, source_dict):
+    @abc.abstractclassmethod
+    def retrieve_data(cls, source_dict):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -41,6 +41,26 @@ class DriverConfig:
     def from_dict(self, config_dict):
         raise NotImplementedError
 
+class DriverDefinition:
+    name: str = "default"
+    type: str
+    configuration: str # DriverConfig
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'type': self.type,
+            'configuration': self.configuration,
+        }
+
+    @classmethod
+    def from_dict(cls, driver_dict):
+        return cls(
+            name=driver_dict['name'],
+            type=driver_dict['type'],
+            configuration=driver_dict['configuration'],
+        )
+
 class BaseDriver:
     dialect: Type[Dialect]
 
@@ -54,10 +74,6 @@ class BaseDriver:
 
     @abc.abstractmethod
     def execute_sql(self, sql):
-        raise NotImplementedError
-
-    @abc.abstractclassmethod
-    def get_compiler(cls):
         raise NotImplementedError
 
     def _create_columns(self, columns_and_types) -> List[Column]:

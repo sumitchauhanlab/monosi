@@ -5,7 +5,8 @@ from typing import Any, Dict, List, Optional
 from core.common.drivers.column import Column, ColumnDataType
 from core.common.drivers.dialect import Dialect
 
-from .base import Monitor, MonitorDefinition, MonitorConfiguration
+from . import MonitorDefinition, MonitorConfiguration
+from .base import Monitor
 from .metrics import MetricBase
 
 @dataclass
@@ -207,7 +208,7 @@ class TableMonitor(TableMonitorConfigurationDefaults, Monitor, TableMonitorConfi
     @classmethod
     def from_definition(cls, definition: TableMonitorDefinition, workspace):
         # monitor_base = super().from_definition(definition, workspace)
-        driver_config = workspace.get_driver_config(definition.source)
+        driver_config = workspace.get_driver_config(definition.datasource)
 
         return cls(
             # name=monitor_base.name,

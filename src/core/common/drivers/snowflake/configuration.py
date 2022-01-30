@@ -14,7 +14,7 @@ class SnowflakeConfiguration(DriverConfig):
         return "snowflake"
 
     @classmethod
-    def validate(cls, config_dict):
+    def retrieve_data(cls, config_dict):
         return {
             'user': config_dict.get('user'),
             'password': config_dict.get('password'),
@@ -23,6 +23,10 @@ class SnowflakeConfiguration(DriverConfig):
             'host': cls._host(config_dict.get('account')),
             'warehouse': config_dict.get('warehouse'),
         }
+
+    @classmethod
+    def validate(cls, config_dict):
+        pass
 
     @classmethod
     def from_dict(cls, config_dict):
