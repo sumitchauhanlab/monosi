@@ -125,10 +125,20 @@ const MonitorForm: React.FC = () => {
       />
       <EuiSpacer size="s" />
       <EuiCheckableCard
-        id="custom_sql"
+        id="custom"
         label="Custom SQL"
         name="Custom SQL"
-        value="custom_sql"
+        value="custom"
+        checked={false}
+        disabled
+        onChange={() => {}}
+      />
+      <EuiSpacer size="s" />
+      <EuiCheckableCard
+        id="schema"
+        label="Schema Changes"
+        name="Custom SQL"
+        value="schema"
         checked={false}
         disabled
         onChange={() => {}}

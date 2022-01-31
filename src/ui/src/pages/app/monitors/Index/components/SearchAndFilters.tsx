@@ -32,11 +32,11 @@ const SearchAndFilters: React.FC<{ setTableQuery: any; monitors: any }> = ({
     const filters = [
       {
         type: 'field_value_selection' as 'field_value_selection',
-        field: 'monitor_type',
+        field: 'type',
         name: 'Type',
         options: monitors
           ? monitors
-              .map((monitor: any) => monitor.monitor_type)
+              .map((monitor: any) => monitor.type)
               .filter(distinct)
               .map((el: any) => {
                 return { value: el };
@@ -46,11 +46,11 @@ const SearchAndFilters: React.FC<{ setTableQuery: any; monitors: any }> = ({
       },
       {
         type: 'field_value_selection' as 'field_value_selection',
-        field: 'datasource.name',
+        field: 'datasource',
         name: 'Source',
         options: monitors
           ? monitors
-              .map((monitor: any) => monitor.datasource.name)
+              .map((monitor: any) => monitor.datasource)
               .filter(distinct)
               .map((el: any) => {
                 return { value: el };

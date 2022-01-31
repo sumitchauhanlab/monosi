@@ -77,7 +77,7 @@ const MonitorsTable: React.FC<{
 
   const [itemIdToOpenActionsPopoverMap, setItemIdToOpenActionsPopoverMap] =
     useState<{ [key: string]: boolean }>({});
-    
+
   useEffect(() => {
     const emptyState = (
       <EuiEmptyPrompt
@@ -129,68 +129,33 @@ const MonitorsTable: React.FC<{
   };
 
   const columns = [
-    // {
-    //   name: 'Status',
-    //   render: (item: any) => {
-    //     let color;
-
-    //     switch (item.status) {
-    //       case 'Healthy':
-    //         color = 'success';
-    //         break;
-    //       case 'Unhealthy':
-    //         color = 'danger';
-    //         break;
-    //       default:
-    //         color = 'warning';
-    //     }
-
-    //     return (
-    //       <div>
-    //         <EuiBadge color={color}>{item.status}</EuiBadge>
-    //         <EuiSpacer size="xs" />
-    //         <EuiText size="s" color="subdued">
-    //           <span>Checked {item.updated_at}</span>
-    //         </EuiText>
-    //       </div>
-    //     );
-    //   },
-    // },
     {
       name: 'Name',
+      field: 'name'
+    },
+    {
+      name: 'Type',
+      field: 'type',
       render: (item: any) => {
-        const monitor_type = item.type
+        return item
           .split('_')
           .map((el: any) => {
             return el.charAt(0).toUpperCase() + el.slice(1);
           })
           .join(' ');
-
-        return (
-          <div>
-            <EuiLink href={'/monitors/' + item.id}>
-              <EuiText size="m">{item.name}</EuiText>
-            </EuiLink>
-            <EuiSpacer size="xs" />
-            <EuiText size="s">{monitor_type}</EuiText>
-          </div>
-        );
-      },
+      }
     },
     {
       field: 'datasource',
       name: 'Data Source',
-      // render: (item: any) => {
-      //   return (
-      //     <>
-      //       <EuiIcon type={item.type} size="l" />
-      //       <EuiText style={{ marginLeft: 10 }}>
-      //         {' '}
-      //         <span>{item.name}</span>
-      //       </EuiText>
-      //     </>
-      //   );
-      // },
+    },
+    {
+      field: 'updated_at',
+      name: 'Updated At',
+    },
+    {
+      field: 'created_at',
+      name: 'Created At',
     },
     {
       name: 'Actions',
