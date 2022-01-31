@@ -6,6 +6,10 @@ import json
 from core.common.drivers import DriverConfig
 from core.monitor.models import MonitorDefinition
 
+from scheduler.job import MonitorJob
+
+from server.scheduler import manager
+
 from . import Base, mapper_registry
 from .base import CrudMixin
 from .datasource import Datasource
@@ -95,8 +99,12 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
         print("{} successfully ran.".format(self.name))
 
     def create(self):
-        super().create()
-        self.run()
+        result = super().create()
+        try:
+            manager.add_job(MonitorJob(self))
+        except Exception as e:
+            raise e
+        # self.run()
 
 
 

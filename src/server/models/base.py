@@ -48,5 +48,4 @@ class CrudMixin(object):
             db.session.delete(self)
             db.session.commit()
         except:
-            ra
             raise Exception("DB: Couldn't delete record")

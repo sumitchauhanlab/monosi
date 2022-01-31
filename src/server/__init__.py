@@ -3,10 +3,12 @@ from flask_cors import CORS
 import os
 import sys
 
-from scheduler.manager import JobManager
+from scheduler.job import MonitorJob
 
-from .db import db
 from .api import MsiApi
+from .db import db
+from .models.monitor import Monitor
+from .scheduler import manager
 
 curr_path = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.abspath(os.path.join(curr_path, "../"))
@@ -50,15 +52,19 @@ def create_app():
     # Initialize UI if SERVE_UI
     _init_ui(app)
 
-    # Initialize scheduler process
-    JobManager(app)
-
     # Initialize DB
     db.init_app(app)
+    db.app = app
     with app.app_context():
         db.create_all()
 
     # Initialize API
     api = MsiApi(app)
+
+    manager.init_app(app)
+    with app.app_context():
+        [manager.add_job(MonitorJob(monitor)) for monitor in Monitor.all()]
+
+    print(manager.get_jobs())
 
     return app

@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import os
 import sys
 
+from .cmd.init import InitCmd
 from .cmd.profile import ProfileCmd
 from .cmd.run import RunCmd
 
@@ -36,6 +37,11 @@ class CliParser(object):
     # Commands
     def version(self, args=None):
         return format_program_version(get_installation_info().version, sys.version.split()[0])
+
+    def init(self, args):
+        args = None
+        task = InitCmd.from_args(args)
+        task.run()
 
     def run(self, args):
         args = None

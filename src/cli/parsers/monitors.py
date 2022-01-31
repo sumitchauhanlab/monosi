@@ -10,6 +10,7 @@ from . import YamlParser
 
 # TODO: Replace with configuration object
 def monitor_definition_factory(monitor_dict):
+    print(monitor_dict)
     monitor_type = monitor_dict['type'].lower()
     if monitor_type == 'table':
         return TableMonitorDefinition

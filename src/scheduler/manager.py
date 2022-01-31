@@ -12,18 +12,22 @@ class JobManager:
         if JobManager.singleton is None:
             self.app = app
             self.api = Api(app)
-            init_api(self.api)
             self.scheduler = MsiScheduler()
             if app is not None:
+                init_api(self.api)
                 self.init_app(app)
             JobManager.singleton = self
 
     def init_app(self, app):
         self.scheduler.init_app(app)
+        self.scheduler.app = app
 
         db.init_app(app)
+        db.app = app
         with app.app_context():
             db.create_all()
+
+        init_api(self.api)
 
         try:
             self.start()
@@ -38,7 +42,7 @@ class JobManager:
     def stop(self):
         return self.scheduler.shutdown()
 
-    def add_job(self, job, args=None, trigger='interval', minutes=720, **kwargs):
+    def add_job(self, job, args=None, trigger='interval', minutes=1, **kwargs):
         return self.scheduler.add_scheduler_job(job, args=args, trigger=trigger, minutes=minutes)
 
     def pause_job(self, job_id):

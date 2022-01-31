@@ -123,6 +123,19 @@ class ProjectConfiguration:
 
         return project
 
+    def to_dict(self):
+        config_dict = {
+            "name": self.project_name,
+            "version": self.version,
+            "monitor-paths": self.monitor_paths,
+        }
+        # if self.collection_name:
+        #     config_dict.update({"collection": self.collection_name})
+        # if self.source_name:
+        #     config_dict.update({"source": self.source_name})
+
+        return config_dict
+
 
 @dataclass
 class Configuration(WorkspaceConfiguration, ProjectConfiguration):

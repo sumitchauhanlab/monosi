@@ -17,4 +17,3 @@ class MonitorJob(BaseJob):
         # track_event(self.task.config, action="run_start", label="scheduled")
         self.task.run()
         # track_event(self.task.config, action="run_finish", label="1")
-

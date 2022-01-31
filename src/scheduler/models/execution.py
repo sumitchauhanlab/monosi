@@ -3,7 +3,7 @@ from scheduler.db import db
 class Execution(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, nullable=False)
-    status = db.Column(db.Integer, nullable=False)
+    state = db.Column(db.Integer, nullable=False)
     result = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=db.func.now(), onupdate=db.func.now())
