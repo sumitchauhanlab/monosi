@@ -178,6 +178,9 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
         # monitor_base = super().from_definition(definition, workspace)
         driver_config = workspace.get_driver_config(definition.datasource)
 
+        columns = [Column.from_dict(col) for col in definition.columns]
+        metrics = cls._create_metrics(columns)
+        
         return cls(
             # name=monitor_base.name,
             # description=monitor_base.description,
@@ -188,4 +191,6 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
             enabled=definition.enabled,
             driver_config=driver_config,
             table=definition.table,
+            columns=columns,
+            metrics=metrics,
         )

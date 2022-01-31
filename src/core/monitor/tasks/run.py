@@ -1,8 +1,9 @@
-# from core.monitor.analyzer import Analyzer
+from core.common.reporter import Reporter
 
 class RunMonitorTask:
     def __init__(self, monitor):
         self.monitor = monitor
+        self.reporter = Reporter()
 
     # def _retrieve_driver_config(self):
     #     try:
@@ -29,13 +30,20 @@ class RunMonitorTask:
         runner = Runner(self._retrieve_driver_config())
         return runner.run(sql)
 
-    # def _analyze(self, results):
-    #     analyzer = Analyzer()
-    #     return analyzer.analyze(self.monitor, results)
+    def _analyze(self, results):
+        from core.monitor.analyzer import Analyzer
+        
+        analyzer = Analyzer(self.reporter)
+        return analyzer.analyze(self.monitor, results)
 
     def run(self):
+        self.reporter.monitor_started(self.monitor)
+
         compiled_sql = self._compile()
         runner_results = self._run(compiled_sql)
+        analysis = self._analyze(runner_results)
+
+        self.reporter.monitor_finished(self.monitor)
         # analysis = self._analyze(runner_results)
         return runner_results
 

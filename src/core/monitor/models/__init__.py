@@ -84,8 +84,11 @@ class MonitorDefinition:
 
     @classmethod
     def from_dict(cls, monitor_dict):
-        configuration = json.dumps(monitor_dict['configuration'])
-        monitor_dict['configuration'] = configuration
+        if 'configuration' in monitor_dict:
+            configuration = json.dumps(monitor_dict['configuration'])
+            monitor_dict['configuration'] = configuration
+        else:
+            monitor_dict['configuration'] = '{}'
 
         return cls(
             **monitor_dict,
