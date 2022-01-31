@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import os
 import sys
 
+from .cmd.profile import ProfileCmd
 from .cmd.run import RunCmd
 
 # Add other modules to PYTHON_PATH
@@ -39,6 +40,11 @@ class CliParser(object):
     def run(self, args):
         args = None
         task = RunCmd.from_args(args)
+        task.run()
+
+    def profile(self, args):
+        args = None
+        task = ProfileCmd.from_args(args)
         task.run()
 
 def get_installation_info():

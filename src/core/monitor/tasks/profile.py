@@ -1,5 +1,7 @@
-from core.common.drivers.column import Column
+from core.common.drivers.column import Column, Table
 from core.common.drivers.factory import load_driver
+
+from core.monitor.models.table import TableMonitorDefinition
 
 class ProfileTask:
     def __init__(self, driver_config):
@@ -19,13 +21,16 @@ class ProfileTask:
         for table in tables:
             try:
                 table_monitor_def = TableMonitorDefinition(
+                    name="{} - Table Health".format(table.name),
+                    type="table",
+                    configuration='{"table": "' + table.name + '", "timestamp_field": "' + table.timestamp().name + '"}',
                     table=table.name,
                     timestamp_field=table.timestamp().name,
                 )
                 definitions.append(table_monitor_def)
-            except:
+            except Exception as e:
                 pass
-
+                
         return definitions
 
     def run(self):

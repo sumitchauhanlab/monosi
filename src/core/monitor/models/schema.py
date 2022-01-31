@@ -60,10 +60,6 @@ class SchemaMetric(MetricBase):
         return ""
 
 @dataclass
-class TableMonitor(TableMonitorConfigurationDefaults, Monitor, TableMonitorConfiguration):
-    metrics: List[ColumnMetricType] = field(default_factory=lambda: ColumnMetricType.all())
-
-@dataclass
 class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorConfiguration):
     columns: List[Column] = field(default_factory=list)
     metrics: List[SchemaMetric] = field(default_factory=list)
@@ -170,7 +166,7 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
 
 
     @classmethod
-    def from_definition(cls, definition: TableMonitorDefinition, workspace):
+    def from_definition(cls, definition: SchemaMonitorDefinition, workspace):
         # monitor_base = super().from_definition(definition, workspace)
         driver_config = workspace.get_driver_config(definition.datasource)
 

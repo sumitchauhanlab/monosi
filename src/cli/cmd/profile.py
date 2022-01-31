@@ -1,40 +1,45 @@
-from core.monitor.models.base import Monitor
+from core.monitor.tasks.profile import ProfileTask
+import os
+
+from cli.utils import yaml
 
 from .base import BaseCmd
 
 
 BOOTSTRAPPED_MONITOR_PATH = './bootstrapped-monitors'
 
-def _write_definition(self, definition, monitors_dir=BOOTSTRAPPED_MONITOR_PATH):
-    database = definition['monosi']['monitors'][0]['table'].split('.')[0]
-    schema = definition['monosi']['monitors'][0]['table'].split('.')[1]
-    table = definition['monosi']['monitors'][0]['table'].split('.')[2]
+def _write_definition(definition, monitors_dir=BOOTSTRAPPED_MONITOR_PATH):
+    table_parts = definition.table.split('.')
+    database = table_parts[0]
+    schema = table_parts[1]
+    table = table_parts[2]
 
     monitor_path = os.path.join(monitors_dir, database, schema)
     if not os.path.exists(monitor_path):
         os.makedirs(monitor_path)
 
     path = os.path.join(monitor_path, table + '.yml')
-    if not os.path.exists(path):
-        yaml.write_file(path, definition)
+    if not os.path.exists(path): # TODO: Append if exists
+        file_contents = {'monosi': {'monitors': definition.to_dict()}}
+        yaml.write_file(path, file_contents)
 
-def _persist_definitions(self, definitions):
+def _persist_definitions(definitions):
     if not os.path.exists(BOOTSTRAPPED_MONITOR_PATH):
         os.makedirs(BOOTSTRAPPED_MONITOR_PATH)
-    self.config.add_monitor_path(BOOTSTRAPPED_MONITOR_PATH)
 
     for definition in definitions:
-        self._write_definition(definition)
+        _write_definition(definition)
 
 class ProfileCmd(BaseCmd):
     def _create_tasks(self):
-        # for source in current workspace
-        #   create profile task
-        return [definition.to_monitor(self.project.configuration) for definition in self.project.monitors]
+        sources = self.project.configuration.sources.values()
+
+        return [ProfileTask(source) for source in sources]
 
     def _process_tasks(self):
         results = [task.run() for task in self.task_queue]
-        # for results of each task
-        #   persist the definitions to file
+        print(results)
+        for result in results:
+            _persist_definitions(result)
 
-        return results
+        print("Profiling complete.")
