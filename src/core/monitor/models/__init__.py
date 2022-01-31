@@ -3,17 +3,19 @@ from typing import Optional, Type
 import json
 
 def load_monitor_cls(monitor_dict):
-    monitor_type = monitor_dict.get('type')
+    monitor_type = monitor_dict.get('type').lower()
     # monitor_type = MonitorType(type_raw)
 
     if monitor_type == "table":
+        from .table import TableMonitor
         return TableMonitor
-    # elif monitor_type == MonitorType.CUSTOM:
-    #     return CustomMonitor
-    # elif monitor_type == MonitorType.SCHEMA:
-    #     return SchemaMonitor
+    elif monitor_type == "custom":
+        from .custom import CustomMonitor
+        return CustomMonitor
+    elif monitor_type == "schema":
+        from .schema import SchemaMonitor
+        return SchemaMonitor
 
-    # Note: Unreachable - we would error at MonitorType instantiation
     raise Exception("Could not find a moniotr with type: {}".format(type_raw))
 
 def load_monitor_definition(monitor_definition):
@@ -22,16 +24,26 @@ def load_monitor_definition(monitor_definition):
 
     configuration = json.loads(monitor_definition['configuration'])
     if monitor_type == "table":
-        from .table import TableMonitor, TableMonitorDefinition
+        from .table import TableMonitorDefinition
         # TableMonitorDefinition.validate()
         return TableMonitorDefinition(
             **monitor_definition,
             **configuration,
         )
-    # elif monitor_type == MonitorType.CUSTOM:
-    #     return CustomMonitor
-    # elif monitor_type == MonitorType.SCHEMA:
-    #     return SchemaMonitor
+    elif monitor_type == "custom":
+        from .custom import CustomMonitorDefinition
+        # CustomMonitorDefinition.validate()
+        return CustomMonitorDefinition(
+            **monitor_definition,
+            **configuration,
+        )
+    elif monitor_type == "schema":
+        from .schema import SchemaMonitorDefinition
+        # SchemaMonitorDefinition.validate()
+        return SchemaMonitorDefinition(
+            **monitor_definition,
+            **configuration,
+        )
 
     # Note: Unreachable - we would error at MonitorType instantiation
     raise Exception("Could not find a monitor definition with type: {}".format(monitor_type))
@@ -48,12 +60,12 @@ class MonitorConfiguration:
 @dataclass
 class MonitorDefinition:
     name: str
-    description: Optional[str]
-    enabled: Optional[bool]
     type: str
     # workspace: str
     configuration: str # TODO (This is NOT a connection configuration, it is the details for the individ monitor)
     datasource: str = 'default' # Used (with workspace) to resolve the DriverConfig
+    description: Optional[str] = None
+    enabled: Optional[bool] = True
     # schedule: Schedule
 
     @classmethod

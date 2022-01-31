@@ -1,6 +1,8 @@
 from typing import Iterable
 
 from core.monitor.models import MonitorDefinition
+from core.monitor.models.custom import CustomMonitorDefinition
+from core.monitor.models.schema import SchemaMonitorDefinition
 from core.monitor.models.table import TableMonitorDefinition
 from cli.utils.files import File
 
@@ -8,9 +10,13 @@ from . import YamlParser
 
 # TODO: Replace with configuration object
 def monitor_definition_factory(monitor_dict):
-    monitor_type = monitor_dict['type']
+    monitor_type = monitor_dict['type'].lower()
     if monitor_type == 'table':
         return TableMonitorDefinition
+    elif monitor_type == 'custom':
+        return CustomMonitorDefinition
+    elif monitor_type == 'schema':
+        return SchemaMonitorDefinition
 
     raise Exception("Could not find monitor type: {}".format(monitor_type))
 
