@@ -3,11 +3,13 @@ from flask_cors import CORS
 import os
 import sys
 
+from core.monitor.tasks.run import RunMonitorTask
 from scheduler.job import MonitorJob
 
 from .api import MsiApi
 from .db import db
 from .models.monitor import Monitor
+from .models.integration import Integration
 from .scheduler import manager
 
 curr_path = os.path.dirname(os.path.abspath(__file__))
@@ -61,10 +63,11 @@ def create_app():
     # Initialize API
     api = MsiApi(app)
 
+    # Initialize monitor jobs
     manager.init_app(app)
     with app.app_context():
-        [manager.add_job(MonitorJob(monitor)) for monitor in Monitor.all()]
+        [monitor.schedule() for monitor in Monitor.all()]
 
-    print(manager.get_jobs())
+    [integration.register() for integration in Integration.all()]
 
     return app

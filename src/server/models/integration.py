@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table, Text, func
 
+from server.integrations import reporter
 from server.integrations.base import IntegrationDefinition
+from server.integrations.slack import SlackIntegration
 
 from . import Base, mapper_registry
 from .base import CrudMixin
@@ -36,3 +38,17 @@ class Integration(IntegrationDefinition, Base, CrudMixin):
         obj_dict['created_at'] = str(self.created_at)
 
         return obj_dict
+
+    def register(self):
+        # TODO: Support more than slack
+        integration = SlackIntegration(
+            name=self.name,
+            enabled=self.enabled,
+            configuration=self.configuration,
+        )
+        reporter.register_listener(integration)
+        print("registered listener")
+
+    def create(self):
+        super().create()
+        self.register()

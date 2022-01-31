@@ -3,7 +3,7 @@ from .text import TextFormatter
 
 class ProgressFormatter(TextFormatter):
     def monitor_started(self, monitor):
-        self.write(monitor.info(), Color.ENDC)
+        # self.write(monitor.info(), Color.ENDC)
         self.write('\n\n', Color.ENDC)
 
     def monitor_finished(self, monitor):

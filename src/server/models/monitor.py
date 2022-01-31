@@ -5,10 +5,12 @@ import json
 
 from core.common.drivers import DriverConfig
 from core.monitor.models import MonitorDefinition
+from core.monitor.tasks.run import RunMonitorTask
 
 from scheduler.job import MonitorJob
 
 from server.scheduler import manager
+from server.integrations import reporter
 
 from . import Base, mapper_registry
 from .base import CrudMixin
@@ -37,7 +39,11 @@ class Workspace:
 
         try:
             cls = load_config(definition.type)
-            ds_config = json.loads(json.loads(definition.configuration)) # TODO: Fix double call
+            ds_config = json.loads(definition.configuration) # TODO: Fix double call
+            try:
+                ds_config = json.loads(ds_config)
+            except:
+                pass
             # ds_config = json.loads(definition.configuration)
             data = cls.retrieve_data(ds_config)
             # cls.validate(data)
@@ -98,13 +104,25 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
         results = monitor.run()
         print("{} successfully ran.".format(self.name))
 
-    def create(self):
-        result = super().create()
+    def schedule(self):
         try:
-            manager.add_job(MonitorJob(self))
+            workspace = Workspace.from_datasource_definitions(Datasource.all())
+            monitor = self.to_monitor(workspace)
+            task = RunMonitorTask(monitor)
+            task.reporter = reporter
+            job = MonitorJob(task)
+            manager.add_job(job, job_id=self.id)
         except Exception as e:
             raise e
+
+    def create(self):
+        result = super().create()
+        self.schedule()
         # self.run()
+
+    # TODO: Implementation - should remove route while pending
+    # def update(self):
+    #     pass
 
 
 

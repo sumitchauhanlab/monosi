@@ -35,15 +35,14 @@ class JobManager:
         except Exception as e:
             raise e
 
-
     def start(self):
         return self.scheduler.start()
 
     def stop(self):
         return self.scheduler.shutdown()
 
-    def add_job(self, job, args=None, trigger='interval', minutes=1, **kwargs):
-        return self.scheduler.add_scheduler_job(job, args=args, trigger=trigger, minutes=minutes)
+    def add_job(self, job, job_id=None, args=None, trigger='interval', minutes=1, **kwargs):
+        return self.scheduler.add_scheduler_job(job, job_id=None, args=args, trigger=trigger, minutes=minutes)
 
     def pause_job(self, job_id):
         return self.scheduler.pause_job(job_id)

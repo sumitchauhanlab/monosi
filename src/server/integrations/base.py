@@ -15,8 +15,8 @@ class IntegrationDefinition:
     def to_dict(self):
         return {
             "name": self.name,
-            "enabled": self.enabled,
             "configuration": json.loads(self.configuration),
+            "enabled": self.enabled,
             "type": self.__class__.__name__,
         }
 
@@ -28,16 +28,10 @@ class IntegrationDefinition:
             enabled=enabled,
             configuration=json.dumps(integration_dict['configuration']),
         )
-
-class BaseIntegration(IntegrationDefinition):
-    def send(self, message):
+        
+    def write(self, message):
         raise NotImplementedError()
 
     @classmethod
     def configuration_schema(cls):
         return {}
-
-    def to_dict(self):
-        return {
-            "configuration_schema": self.__class__.configuration_schema(),
-        }

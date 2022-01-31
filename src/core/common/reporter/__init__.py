@@ -17,7 +17,7 @@ class Reporter:
         for notification_type in NotificationType.all():
             self.listeners[notification_type] = [formatter]
         
-    def register_listener(self, listener, *notifications):
+    def register_listener(self, listener, notifications=NotificationType.all()):
         for notification in notifications:
             self.listeners[notification].append(listener)
 
