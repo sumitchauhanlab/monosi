@@ -22,7 +22,7 @@ def load_monitor_definition(monitor_definition):
     monitor_type = monitor_definition['type']
     # monitor_type = MonitorType(type_raw)
 
-    configuration = json.loads(monitor_definition['configuration'])
+    configuration = monitor_definition['configuration']
     if monitor_type == "table":
         from .table import TableMonitorDefinition
         # TableMonitorDefinition.validate()
@@ -84,10 +84,17 @@ class MonitorDefinition:
 
     @classmethod
     def from_dict(cls, monitor_dict):
+        configuration = json.dumps(monitor_dict['configuration'])
+        monitor_dict['configuration'] = configuration
+
         return cls(
-            **monitor_dict
+            **monitor_dict,
         )
 
-    def to_monitor(self, workspace): # TODO: THIS IS THE MAIN PROBLEM
-        monitor_cls = load_monitor_definition(self.to_dict())
+    def to_monitor(self, workspace): # TODO: to_dict contains id, updated_at, created_at
+        monitor_dict = self.to_dict()
+        monitor_dict.pop('id')
+        monitor_dict.pop('created_at')
+        monitor_dict.pop('updated_at')
+        monitor_cls = load_monitor_definition(monitor_dict)
         return monitor_cls.to_monitor(workspace)

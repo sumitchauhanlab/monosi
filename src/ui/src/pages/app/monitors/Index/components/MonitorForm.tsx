@@ -25,18 +25,17 @@ import datasourceService from 'services/datasources';
 
 const MonitorForm: React.FC = () => {
   const [name, setName] = useState('');
-  const [monitorType, setMonitorType] = useState('table_metrics');
-  const [intervalAmount, setIntervalAmount] = useState('');
-  const [intervalType, setIntervalType] = useState('minutes');
-  const [datasourceId, setDatasourceId] = useState('');
+  const [type, setType] = useState('table');  
+  const [datasourceName, setDatasourceName] = useState('');
   const [table, setTable] = useState('');
   const [timestampField, setTimestampField] = useState('');
 
+  const [intervalAmount, setIntervalAmount] = useState('');
+  const [intervalType, setIntervalType] = useState('minutes');
+
   const [datasources, setDatasources] = useState([]);
   const [selectedDatasource, setSelectedDatasource] = useState([]);
-  const [tableOptions, setTableOptions] = useState([]);
-  const [selectedTable, setSelectedTable] = useState([]);
-  const [timestampOptions, setTimestampOptions] = useState([]);
+
 
   useEffect(() => {
     async function loadDatasources() {
@@ -51,62 +50,28 @@ const MonitorForm: React.FC = () => {
   const selectDatasource = async (selectedOptions: any) => {
     if (selectedOptions.length === 0) return;
 
-    async function retrieveTableOptions(datasourceId: any) {
-      setTableOptions([]);
-      // const resp = await datasourceService.schema(datasourceId);
-      // if (resp && resp.schema && resp.schema.tables) {
-      //   setTableOptions(resp.schema.tables);
-      // }
-    }
-
     setSelectedDatasource(selectedOptions);
 
-    const datasource = selectedOptions[0].value;
-    setDatasourceId(datasourceId);
-    await retrieveTableOptions(datasourceId);
-  };
+    console.log(selectedOptions);
 
-  const selectTable = (selectedOptions: any) => {
-    if (selectedOptions.length === 0) return;
-
-    setSelectedTable(selectedOptions);
-
-    const tableName = selectedOptions[0].value;
-    const selectedTable: any = tableOptions.find((el: any) => {
-      return el.name === tableName;
-    });
-    setTable(
-      selectedTable.database +
-        '.' +
-        selectedTable.schema +
-        '.' +
-        selectedTable.name
-    );
-
-    const timestampFields = selectedTable.columns.filter((el: any) => {
-      return el.data_type === 'date';
-    });
-    setTimestampOptions(
-      timestampFields.map((el: any) => {
-        return { text: el.name, value: el.name };
-      })
-    );
+    const datasource = selectedOptions[0].label;
+    setDatasourceName(datasource);
   };
 
   const createMonitor = () => {
     const service = MonitorService;
     const body = {
       name: name,
-      type: monitorType,
-      datasource: datasourceId,
+      type: type,
+      datasource: datasourceName,
       configuration: {
         table: table,
         timestamp_field: timestampField,
       },
-      schedule: {
-        interval_amount: intervalAmount,
-        interval_type: intervalType,
-      },
+      // schedule: {
+      //   interval_amount: intervalAmount,
+      //   interval_type: intervalType,
+      // },
     };
 
     const resp = service.create(body);
@@ -151,10 +116,10 @@ const MonitorForm: React.FC = () => {
       />
       <EuiHorizontalRule />
       <EuiCheckableCard
-        id="table_health"
+        id="table"
         label="Table Health"
         name="Table Health"
-        value="table_health"
+        value="table"
         checked={true}
         onChange={() => {}}
       />
@@ -181,22 +146,13 @@ const MonitorForm: React.FC = () => {
         />
       </EuiFormRow>
       <EuiFormRow label="Table">
-        <EuiComboBox
-          isDisabled={
-            selectedDatasource.length <= 0 || tableOptions.length <= 0
-          }
-          selectedOptions={selectedTable}
-          singleSelection={{ asPlainText: true }}
-          onChange={selectTable}
-          options={tableOptions.map((el: any) => {
-            return { label: el.name, value: el.name };
-          })}
+        <EuiFieldText
+          value={table}
+          onChange={(e) => setTable(e.target.value)}
         />
       </EuiFormRow>
       <EuiFormRow label="Timestamp Field">
-        <EuiSelect
-          disabled={selectedTable.length <= 0}
-          options={timestampOptions}
+        <EuiFieldText
           value={timestampField}
           onChange={(e) => setTimestampField(e.target.value)}
         />

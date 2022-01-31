@@ -53,6 +53,7 @@ const DatasourcesTable: React.FC = () => {
       name: 'Created At',
     },
     {
+      name: 'Actions',
       render: (item: any) => {
         return (
           <EuiPopover

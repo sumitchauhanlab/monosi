@@ -60,3 +60,6 @@ class Datasource(DriverDefinition, Base, CrudMixin):
         configuration = json.dumps(self.configuration)
         self.configuration = configuration
         super().create()
+
+    # def profile(self):
+    #     pass

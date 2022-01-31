@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   EuiBadge,
+  EuiButtonIcon,
+  EuiContextMenuPanel,
+  EuiContextMenuItem,
   EuiEmptyPrompt,
   EuiIcon,
   EuiInMemoryTable,
@@ -72,6 +75,9 @@ const MonitorsTable: React.FC<{
 }> = ({ monitors, query, loading }) => {
   const [message, setMessage] = useState(<>Loading monitors...</>);
 
+  const [itemIdToOpenActionsPopoverMap, setItemIdToOpenActionsPopoverMap] =
+    useState<{ [key: string]: boolean }>({});
+    
   useEffect(() => {
     const emptyState = (
       <EuiEmptyPrompt
@@ -87,6 +93,40 @@ const MonitorsTable: React.FC<{
       setMessage(<></>);
     }
   }, [monitors]);
+
+  const togglePopover = (itemId: any) => {
+    const isPopped: boolean = !itemIdToOpenActionsPopoverMap[itemId];
+    const newItemIdToOpenActionsPopoverMap: any = {
+      ...itemIdToOpenActionsPopoverMap,
+      [itemId]: isPopped,
+    };
+
+    setItemIdToOpenActionsPopoverMap(newItemIdToOpenActionsPopoverMap);
+  };
+
+  const closePopover = (itemId: any) => {
+    // only update the state if this item's popover is open
+    if (isPopoverOpen(itemId)) {
+      const newItemIdToOpenActionsPopoverMap: any = {
+        ...itemIdToOpenActionsPopoverMap,
+        [itemId]: false,
+      };
+
+      setItemIdToOpenActionsPopoverMap(newItemIdToOpenActionsPopoverMap);
+    }
+  };
+
+  const isPopoverOpen = (itemId: any) => {
+    return itemIdToOpenActionsPopoverMap[itemId];
+  };
+
+  const deleteMonitor = (itemId: any) => {
+    const response = MonitorService.delete(itemId);
+    // remove user from state based on response
+    closePopover(itemId);
+
+    window.location.reload();
+  };
 
   const columns = [
     // {
@@ -151,6 +191,43 @@ const MonitorsTable: React.FC<{
       //     </>
       //   );
       // },
+    },
+    {
+      name: 'Actions',
+      render: (item: any) => {
+        return (
+          <EuiPopover
+            id={`${item.id}-actions`}
+            button={
+              <EuiButtonIcon
+                aria-label="Actions"
+                iconType="gear"
+                size="s"
+                color="text"
+                onClick={() => togglePopover(item.id)}
+              />
+            }
+            isOpen={isPopoverOpen(item.id)}
+            closePopover={() => closePopover(item.id)}
+            panelPaddingSize="none"
+            anchorPosition="leftCenter"
+          >
+            <EuiContextMenuPanel
+              items={[
+                <EuiContextMenuItem
+                  key="C"
+                  icon="trash"
+                  onClick={() => {
+                    deleteMonitor(item.id);
+                  }}
+                >
+                  Delete
+                </EuiContextMenuItem>,
+              ]}
+            />
+          </EuiPopover>
+        );
+      },
     },
   ];
 
