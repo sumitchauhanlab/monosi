@@ -20,7 +20,7 @@ ENV SERVE_UI 1
 
 RUN rm -rf ./ui
 RUN mkdir ./ui
-COPY --from=build-step /app/build ./server/ui/build
+COPY --from=build-step /app/build ./ui/build
 
 EXPOSE 3000
 WORKDIR /app

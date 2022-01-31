@@ -8,8 +8,12 @@ from scheduler.manager import JobManager
 from .db import db
 from .api import MsiApi
 
+curr_path = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.abspath(os.path.join(curr_path, "../"))
+sys.path.append(src_path)
+
 def _build_path():
-    build_path = os.path.join(path, 'ui/build/')
+    build_path = os.path.join(src_path, 'ui/build/')
     if not os.path.exists(build_path):
         raise Exception("Client UI was not built before attempting to serve via Flask.")
 
