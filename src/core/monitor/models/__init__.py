@@ -67,7 +67,7 @@ class MonitorDefinition:
             "enabled": self.enabled,
             "type": self.type,
             "datasource": self.datasource,
-            "configuration": self.configuration,
+            "configuration": json.loads(self.configuration),
         }
 
     @classmethod

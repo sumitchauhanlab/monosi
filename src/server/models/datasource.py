@@ -38,7 +38,7 @@ class Datasource(DriverDefinition, Base, CrudMixin):
         "datasource",
         mapper_registry.metadata,
         Column("id", Integer, primary_key=True),
-        Column("name", String(50)),
+        Column("name", String(50), unique=True),
         Column("type", String(50)), # TODO: Enum
         Column("configuration", Text), # TODO: Better way to not store JSON-style configuration?
 
@@ -55,3 +55,8 @@ class Datasource(DriverDefinition, Base, CrudMixin):
         obj_dict['created_at'] = str(self.created_at)
 
         return obj_dict
+
+    def create(self):
+        configuration = json.dumps(self.configuration)
+        self.configuration = configuration
+        super().create()

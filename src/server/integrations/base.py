@@ -16,15 +16,16 @@ class IntegrationDefinition:
         return {
             "name": self.name,
             "enabled": self.enabled,
-            "configuration": self.configuration,
+            "configuration": json.loads(self.configuration),
             "type": self.__class__.__name__,
         }
 
     @classmethod
     def from_dict(cls, integration_dict):
+        enabled = integration_dict.get('enabled') or True
         return cls(
             name=integration_dict['name'],
-            enabled=integration_dict['enabled'],
+            enabled=enabled,
             configuration=json.dumps(integration_dict['configuration']),
         )
 

@@ -12,9 +12,8 @@ const IntegrationForm: React.FC = () => {
   const handleClick = async () => {
     const body = {
       name: connectorName,
-      integration_type: 'slack',
+      type: 'slack',
       configuration: {
-        name: connectorName,
         url: slackWebhookUrl,
       },
     };

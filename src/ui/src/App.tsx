@@ -9,7 +9,7 @@ import {
 
 import 'App.css';
 
-// import MonitorsIndex from 'pages/app/monitors/Index';
+import MonitorsIndex from 'pages/app/monitors/Index';
 // import MonitorsDetail from 'pages/app/monitors/Detail';
 
 import IntegrationsSettings from 'pages/settings/Integrations';
@@ -21,10 +21,10 @@ function App() {
     <div className="App" style={{ minHeight: '100vh' }}>
       <Router>
         <Switch>
-{/*          <Route exact path="/monitors">
+          <Route exact path="/monitors">
               <MonitorsIndex />
           </Route>
-          <Route exact path="/monitors/:id">
+{/*          <Route exact path="/monitors/:id">
               <MonitorsDetail />
           </Route>*/}
 
@@ -39,7 +39,7 @@ function App() {
           </Route>
 
           <Route path="*">
-              <Redirect to="/settings/profile" />
+              <Redirect to="/monitors" />
           </Route>
         </Switch>
       </Router>

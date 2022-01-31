@@ -33,7 +33,9 @@ class Workspace:
 
         try:
             cls = load_config(definition.type)
-            data = cls.retrieve_data(json.loads(definition.configuration))
+            ds_config = json.loads(json.loads(definition.configuration)) # TODO: Fix double call
+            # ds_config = json.loads(definition.configuration)
+            data = cls.retrieve_data(ds_config)
             # cls.validate(data)
             config = cls.from_dict(data)
         except Exception as e:
@@ -61,6 +63,7 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
 
         Column("name", String(50)),
         Column("description", Text),
+        Column("type", String(50)),
         Column("enabled", Boolean),
         Column("configuration", Text), # TODO: Better way to not store JSON-style configuration?
         # Column('workspace', String), # TODO: Namespace by workspace
@@ -76,11 +79,20 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
     # source = relationship() # TOOD: Declare
     # workspace = relationship()
 
+    def to_dict(self):
+        obj_dict = super().to_dict()
+
+        obj_dict['id'] = self.id
+        obj_dict['updated_at'] = str(self.updated_at)
+        obj_dict['created_at'] = str(self.created_at)
+
+        return obj_dict
+        
     def run(self):
         workspace = Workspace.from_datasource_definitions(Datasource.all())
         monitor = self.to_monitor(workspace)
         results = monitor.run()
-        print(results)
+        print("{} successfully ran.".format(self.name))
 
     def create(self):
         super().create()

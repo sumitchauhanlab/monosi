@@ -25,7 +25,7 @@ class CrudMixin(object):
     def all(cls):
         try:
             return cls.query.all()
-        except:
+        except Exception as e:
             raise Exception("DB: Couldn't query all records")
 
     def create(self):
@@ -33,7 +33,6 @@ class CrudMixin(object):
             db.session.add(self)
             db.session.commit()
         except Exception as e:
-            print(e)
             raise Exception("DB: Couldn't persist record")
 
     def update(self, updates):
