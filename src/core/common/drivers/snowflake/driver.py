@@ -6,6 +6,7 @@ import snowflake.connector
 from core.common.drivers import BaseDriver
 from core.common.drivers.dialect import Dialect
 from core.common.drivers.column import Column, ColumnDataType
+from core.common.events import track_event
 
 from .dialect import SnowflakeDialect
 from .configuration import SnowflakeConfiguration
@@ -88,10 +89,10 @@ class SnowflakeDriver(BaseDriver):
                 self._instance = snowflake.connector.connect(
                     **connection_details
                 )
-                # track_event(self.config, action="database_connection_success", label="snowflake")
+                track_event(self.config, action="database_connection_success", label="snowflake")
             except Exception as e:
                 raise e
-                # track_event(self.config, action="database_connection_fail", label="snowflake")
+                track_event(self.config, action="database_connection_fail", label="snowflake")
 
         cs = self._instance.cursor()
         results = []

@@ -1,7 +1,10 @@
+from core.common.events import track_event
+
 from . import create_app
 from .models.datasource import Datasource
 from .models.monitor import Monitor
 
+track_event(None, action="server_start")
 app = create_app()
 
 def create_monitor_test():

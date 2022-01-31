@@ -1,9 +1,11 @@
+import os
+import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple
-import os
 
 from core.common.drivers import DriverConfig
 from core.common.drivers.factory import load_config
+import core.common.events as events
 
 from cli.utils.files import file_find
 import cli.utils.yaml as yaml
@@ -11,10 +13,30 @@ import cli.utils.yaml as yaml
 
 DEFAULT_WORKSPACES_DIR = os.path.expanduser('~/.monosi')
 
+def read_user_id(user_filepath: str):
+    user_data = yaml.parse_file(user_filepath)
+    return user_data['id']
+
+def write_user_id(user_filepath: str):
+    user_id = str(uuid.uuid4())
+
+    if not os.path.exists(user_filepath):
+        user_data = {"id": user_id}
+        yaml.write_file(user_filepath, user_data)
+
+    return user_id
+
+def convert_to_bool(val):
+    if val and val.lower() == "true":
+        return True
+    
+    return False
+
 @dataclass
 class WorkspaceConfiguration:
     sources: Dict[str, DriverConfig] = field(default_factory=list())
     name: str = "default"
+    send_anonymous_stats: bool = True
     workspaces_dir: str = DEFAULT_WORKSPACES_DIR # TODO: Update to args
     
     @classmethod
@@ -45,9 +67,26 @@ class WorkspaceConfiguration:
                 source = cls._config_from_source(workspace_dict['sources'][source_name])
                 sources[source_name] = source
 
-        return cls(
+        config = cls(
             sources=sources,
         )
+        config._initialize_events() # TODO: Read value
+
+        return config
+
+    def _initialize_events(self):
+        if not self.send_anonymous_stats:
+            return
+
+        user_filepath = os.path.join(self.workspaces_dir, '.cookie.yml')
+        try:
+            if os.path.exists(user_filepath):
+                user_id = read_user_id(user_filepath)
+            else:
+                user_id = write_user_id(user_filepath)
+            events.set_user_id(user_id)
+        except Exception as e:
+            logging.error("There was an issue sending anonymous usage stats with a user id.")
         
     @classmethod
     def _get_workspace_dict(cls, workspace_name: str, all_workspaces_dict: Dict[str, Any]):

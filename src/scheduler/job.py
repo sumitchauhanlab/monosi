@@ -1,4 +1,4 @@
-# from monosi.events import track_event
+from core.common.events import track_event
 
 class BaseJob:
     @classmethod
@@ -14,6 +14,6 @@ class MonitorJob(BaseJob):
         self.task = task
 
     def run(self, *args, **kwargs):
-        # track_event(self.task.config, action="run_start", label="scheduled")
+        track_event(None, action="run_start", label="scheduled")
         self.task.run()
-        # track_event(self.task.config, action="run_finish", label="1")
+        track_event(None, action="run_finish", label="scheduled")
