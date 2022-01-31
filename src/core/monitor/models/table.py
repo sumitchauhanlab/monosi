@@ -24,6 +24,15 @@ class TableMonitorDefinition(MonitorConfiguration, TableMonitorConfigurationDefa
     def to_monitor(self, workspace):
         return TableMonitor.from_definition(self, workspace)
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "description": self.description,
+            "type": "table",
+            "table": self.table,
+            "timestamp_field": self.timestamp_field,
+        }
+
 def extract_or_default(obj, key, default):
     return obj[key] if key in obj else default
 

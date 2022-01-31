@@ -19,9 +19,15 @@ def _write_definition(definition, monitors_dir=BOOTSTRAPPED_MONITOR_PATH):
         os.makedirs(monitor_path)
 
     path = os.path.join(monitor_path, table + '.yml')
-    if not os.path.exists(path): # TODO: Append if exists
-        file_contents = {'monosi': {'monitors': definition.to_dict()}}
-        yaml.write_file(path, file_contents)
+    if os.path.exists(path):
+        try:
+            file_contents = yaml.parse_file(path)
+            file_contents['monosi']['monitors'].append(definition.to_dict())
+        except Exception as e:
+            file_contents = {'monosi': {'monitors': definition.to_dict()}}
+    else:
+        file_contents = {'monosi': {'monitors': [definition.to_dict()]}}
+    yaml.write_file(path, file_contents)
 
 def _persist_definitions(definitions):
     if not os.path.exists(BOOTSTRAPPED_MONITOR_PATH):
@@ -38,7 +44,6 @@ class ProfileCmd(BaseCmd):
 
     def _process_tasks(self):
         results = [task.run() for task in self.task_queue]
-        print(results)
         for result in results:
             _persist_definitions(result)
 

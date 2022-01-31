@@ -12,7 +12,7 @@ from .metrics import MetricBase
 
 @dataclass
 class SchemaMonitorConfigurationDefaults:
-	columns: List[str] = field(default_factory=list)
+	columns: List[Dict[str, str]] = field(default_factory=list)
 
 @dataclass
 class SchemaMonitorConfiguration:
@@ -23,6 +23,14 @@ class SchemaMonitorDefinition(MonitorConfiguration, SchemaMonitorConfigurationDe
     def to_monitor(self, workspace):
         return SchemaMonitor.from_definition(self, workspace)
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "description": self.description,
+            "type": "schema",
+            "table": self.table,
+            "columns": self.columns,
+        }
 
 def extract_or_default(obj, key, default):
     return obj[key] if key in obj else default

@@ -3,9 +3,12 @@ import os
 from cli.config import ProjectConfiguration
 from cli.utils.yaml import write_file
 
-class InitCmd:
+class InitCmd(object):
     @classmethod
     def from_args(cls, args=None):
+        return cls()
+
+    def run(self):
         project_name = "monosi-repo"
         project_directory = os.path.join(os.getcwd(), project_name)
 
@@ -24,4 +27,4 @@ class InitCmd:
         project_file = os.path.join(project_directory, 'monosi_project.yml')
         write_file(project_file, project_configuration.to_dict())
 
-        print("Successfully initialized monosi project.")
+        print("Successfully initialized monosi project: {}".format(project_name))
