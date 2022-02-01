@@ -135,6 +135,7 @@ const MonitorForm: React.FC = () => {
         label="Schema Changes"
         name="Custom SQL"
         value="schema"
+        disabled
         checked={type == "schema"}
         onChange={() => {setType("schema")}}
       />
