@@ -31,8 +31,8 @@ class SchemaMonitorDefinition(MonitorConfiguration, SchemaMonitorConfigurationDe
             "type": "schema",
             "table": self.table,
             "columns": self.columns,
-            "schedule_minutes": self.schedule_minutes,
-            "schedule_type": self.schedule_type,
+            # "schedule_minutes": self.schedule_minutes,
+            # "schedule_type": self.schedule_type,
             # "schedule": Schedule(self.schedule_minutes).to_dict(),
         }
 
@@ -184,6 +184,7 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
 
         columns = [Column.from_dict(col) for col in definition.columns]
         metrics = cls._create_metrics(columns)
+        enabled = definition.enabled or True
         
         return cls(
             # name=monitor_base.name,
@@ -192,8 +193,8 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
             # driver_config=monitor_base.driver_config,
             name=definition.name,
             description=definition.description,
-            schedule=Schedule(definition.schedule_minutes) 
-            enabled=definition.enabled or True,
+            schedule=Schedule(definition.schedule_minutes),
+            enabled=enabled,
             driver_config=driver_config,
             table=definition.table,
             columns=columns,

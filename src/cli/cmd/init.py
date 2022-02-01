@@ -27,4 +27,28 @@ class InitCmd(object):
         project_file = os.path.join(project_directory, 'monosi_project.yml')
         write_file(project_file, project_configuration.to_dict())
 
+        monitors_dir = os.path.join(project_directory, 'monitors')
+        if not os.path.exists(monitors_dir):
+            os.mkdir(monitors_dir)
+            monitor_example_path = os.path.join(monitors_dir, 'example.yml')
+            file_contents = {
+                'monosi': {
+                    'monitors': [
+                        {
+                            'name': 'Example Monitor',
+                            'description': 'Monitor created using the `monosi init` command',
+                            'type': 'custom',
+                            'sql': 'SELECT 1 + 1',
+                            'thresholds': [
+                                {
+                                    'operator': 'eq',
+                                    'value': 2,
+                                },
+                            ],
+                        }
+                    ]
+                }
+            }
+            write_file(monitor_example_path, file_contents)
+
         print("Successfully initialized monosi project: {}".format(project_name))

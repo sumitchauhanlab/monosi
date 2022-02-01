@@ -1,3 +1,4 @@
+from cli.config import ProjectConfiguration
 from core.monitor.tasks.profile import ProfileTask
 import os
 
@@ -46,5 +47,8 @@ class ProfileCmd(BaseCmd):
         results = [task.run() for task in self.task_queue]
         for result in results:
             _persist_definitions(result)
+
+        self.project.configuration.add_monitor_path('./bootstrapped-monitors')
+        yaml.write_file(os.path.join(os.getcwd(), 'monosi_project.yml'), self.project.configuration.to_dict()) # TODO: might be yaml
 
         print("Profiling complete.")

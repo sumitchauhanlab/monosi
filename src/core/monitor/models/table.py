@@ -31,8 +31,8 @@ class TableMonitorDefinition(MonitorConfiguration, TableMonitorConfigurationDefa
             "description": self.description,
             "type": "table",
             "table": self.table,
-            "schedule_minutes": self.schedule_minutes,
-            "schedule_type": self.schedule_type,
+            # "schedule_minutes": self.schedule_minutes,
+            # "schedule_type": self.schedule_type,
             # "schedule": Schedule(self.schedule_minutes).to_dict(),
             "timestamp_field": self.timestamp_field,
         }
