@@ -10,6 +10,7 @@ from core.common.drivers.dialect import Dialect
 from . import MonitorConfiguration, MonitorDefinition
 from .base import Monitor
 from .metrics import MetricBase, MetricType
+from .schedule import Schedule
 
 # class Operator(Enum):
 #     EQ = 'eq'
@@ -180,7 +181,8 @@ class CustomMonitor(Monitor):
             # driver_config=monitor_base.driver_config,
             name=definition.name,
             description=definition.description,
-            enabled=definition.enabled,
+            schedule=Schedule(definition.schedule_minutes),
+            enabled=definition.enabled or True,
             driver_config=driver_config,
             metric=metric,
         )

@@ -1,6 +1,7 @@
 import logging
 from flask_restful import Api
 
+from .job import MonitorJob
 from .base import MsiScheduler
 from .handlers import init_api
 from .db import db
@@ -41,8 +42,12 @@ class JobManager:
     def stop(self):
         return self.scheduler.shutdown()
 
-    def add_job(self, job, job_id=None, args=None, trigger='interval', minutes=1, **kwargs):
-        return self.scheduler.add_scheduler_job(job, job_id=None, args=args, trigger=trigger, minutes=minutes)
+    def add_job(self, job, job_id=None, args=None, trigger='interval', minutes=720, **kwargs):
+        if isinstance(job, MonitorJob):
+            minutes = job.task.monitor.schedule.minutes
+            trigger = job.task.monitor.schedule.type._value_
+
+        return self.scheduler.add_scheduler_job(job, job_id=str(job_id), args=args, trigger=trigger, minutes=minutes)
 
     def pause_job(self, job_id):
         return self.scheduler.pause_job(job_id)

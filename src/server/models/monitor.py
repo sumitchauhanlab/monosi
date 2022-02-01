@@ -5,6 +5,7 @@ import json
 
 from core.common.drivers import DriverConfig
 from core.monitor.models import MonitorDefinition
+from core.monitor.models.schedule import Schedule
 from core.monitor.tasks.run import RunMonitorTask
 
 from scheduler.job import MonitorJob
@@ -63,6 +64,16 @@ class Workspace:
 # TODO: Is this necessary? Is it actually mapped?
 # @mapper_registry.mapped
 
+# @dataclass
+# class Schedule(Schedule, Base):
+#     __table__ = Table(
+#         "schedule",
+#         mapper_registry.metadata,
+#         Column("id", Integer, primary_key=True),
+#         Column("minutes", Integer),
+#         Column("type", String(50)),
+#     )
+
 @dataclass
 class Monitor(MonitorDefinition, Base, CrudMixin):
     # TODO: Abstract id, created_at, updated_at
@@ -79,6 +90,8 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
         # Column('workspace', String), # TODO: Namespace by workspace
         Column('datasource', String, ForeignKey('datasource.name')),
         # Column("schedule", Text), # TODO: Figure out nested dataclass
+        Column("schedule_minutes", Integer),
+        Column("schedule_type", String(50)),
 
         # TODO: Add updated_on fn
         Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),

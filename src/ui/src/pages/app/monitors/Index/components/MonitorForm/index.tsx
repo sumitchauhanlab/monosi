@@ -62,6 +62,8 @@ const MonitorForm: React.FC = () => {
       type: type,
       datasource: datasourceName,
       configuration: configuration,
+      schedule_minutes: intervalAmount,
+      schedule_type: intervalType,
       // schedule: {
       //   interval_amount: intervalAmount,
       //   interval_type: intervalType,
@@ -95,6 +97,7 @@ const MonitorForm: React.FC = () => {
               <EuiFlexItem grow={false}>
                 <EuiSelect
                   value={intervalType}
+                  disabled
                   options={[{ text: 'minutes' }]}
                 />
               </EuiFlexItem>

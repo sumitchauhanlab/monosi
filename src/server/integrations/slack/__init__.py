@@ -58,7 +58,6 @@ class SlackIntegration(IntegrationDefinition):
         pass
 
     def monitor_started(self, none_obj):
-        print("It delegated!")
         self.write("A monitor is running!")
 
     def monitor_finished(self, none_obj):

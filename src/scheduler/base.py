@@ -57,9 +57,9 @@ class MsiScheduler(APScheduler):
                     "state": constants.STATUS_FAILED
                 })
 
-    def add_scheduler_job(self, monitor_job, job_id=None, args=None, trigger='interval', minutes=1, **kwargs):
+    def add_scheduler_job(self, monitor_job, job_id=None, args=None, trigger='interval', minutes=720, **kwargs):
         if not job_id:
-            job_id = uuid.uuid4().hex
+            job_id = str(uuid.uuid4().hex)
 
         if not args:
             args = []

@@ -1,6 +1,9 @@
-from dataclasses import dataclass
-from typing import Optional, Type
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Optional 
 import json
+
+from .schedule import Schedule, ScheduleType
 
 def load_monitor_cls(monitor_dict):
     monitor_type = monitor_dict.get('type').lower()
@@ -16,7 +19,7 @@ def load_monitor_cls(monitor_dict):
         from .schema import SchemaMonitor
         return SchemaMonitor
 
-    raise Exception("Could not find a moniotr with type: {}".format(type_raw))
+    raise Exception("Could not find a moniotr with type: {}".format(monitor_type))
 
 def load_monitor_definition(monitor_definition):
     monitor_type = monitor_definition['type']
@@ -48,7 +51,6 @@ def load_monitor_definition(monitor_definition):
     # Note: Unreachable - we would error at MonitorType instantiation
     raise Exception("Could not find a monitor definition with type: {}".format(monitor_type))
 
-
 @dataclass
 class MonitorConfiguration:
     pass
@@ -63,10 +65,12 @@ class MonitorDefinition:
     type: str
     # workspace: str
     configuration: str # TODO (This is NOT a connection configuration, it is the details for the individ monitor)
+    schedule_minutes: int = 720
+    schedule_type: str = ScheduleType.INTERVAL._value_
     datasource: str = 'default' # Used (with workspace) to resolve the DriverConfig
     description: Optional[str] = None
     enabled: Optional[bool] = True
-    # schedule: Schedule
+    # schedule: Schedule = field(default_factory=lambda: Schedule())
 
     @classmethod
     def validate(cls, monitor_dict):
@@ -79,6 +83,9 @@ class MonitorDefinition:
             "enabled": self.enabled,
             "type": self.type,
             "datasource": self.datasource,
+            # "schedule": Schedule(self.schedule_minutes).to_dict(),
+            "schedule_minutes": self.schedule_minutes,
+            "schedule_type": self.schedule_type,
             "configuration": json.loads(self.configuration),
         }
 
@@ -101,3 +108,4 @@ class MonitorDefinition:
         monitor_dict.pop('updated_at')
         monitor_cls = load_monitor_definition(monitor_dict)
         return monitor_cls.to_monitor(workspace)
+

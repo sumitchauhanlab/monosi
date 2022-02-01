@@ -8,6 +8,7 @@ from core.common.drivers.dialect import Dialect
 from . import MonitorDefinition, MonitorConfiguration
 from .base import Monitor
 from .metrics import MetricBase
+from .schedule import Schedule
 
 @dataclass
 class TableMonitorConfigurationDefaults:
@@ -30,6 +31,9 @@ class TableMonitorDefinition(MonitorConfiguration, TableMonitorConfigurationDefa
             "description": self.description,
             "type": "table",
             "table": self.table,
+            "schedule_minutes": self.schedule_minutes,
+            "schedule_type": self.schedule_type,
+            # "schedule": Schedule(self.schedule_minutes).to_dict(),
             "timestamp_field": self.timestamp_field,
         }
 
@@ -226,7 +230,8 @@ class TableMonitor(TableMonitorConfigurationDefaults, Monitor, TableMonitorConfi
             # driver_config=monitor_base.driver_config,
             name=definition.name,
             description=definition.description,
-            enabled=definition.enabled,
+            schedule=Schedule(definition.schedule_minutes),
+            enabled=definition.enabled or True,
             driver_config=driver_config,
             table=definition.table,
             timestamp_field=definition.timestamp_field,

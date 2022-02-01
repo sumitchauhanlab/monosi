@@ -8,6 +8,7 @@ from core.common.drivers.column import Column
 from . import MonitorConfiguration, MonitorDefinition
 from .base import Monitor
 from .metrics import MetricBase
+from .schedule import Schedule
 
 
 @dataclass
@@ -30,6 +31,9 @@ class SchemaMonitorDefinition(MonitorConfiguration, SchemaMonitorConfigurationDe
             "type": "schema",
             "table": self.table,
             "columns": self.columns,
+            "schedule_minutes": self.schedule_minutes,
+            "schedule_type": self.schedule_type,
+            # "schedule": Schedule(self.schedule_minutes).to_dict(),
         }
 
 def extract_or_default(obj, key, default):
@@ -188,7 +192,8 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
             # driver_config=monitor_base.driver_config,
             name=definition.name,
             description=definition.description,
-            enabled=definition.enabled,
+            schedule=Schedule(definition.schedule_minutes) 
+            enabled=definition.enabled or True,
             driver_config=driver_config,
             table=definition.table,
             columns=columns,
