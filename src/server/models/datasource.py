@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import json
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table, Text, func
 
-from core.common.drivers import DriverDefinition
+from core.common.drivers.base import DriverDefinition
 
 from . import Base, mapper_registry
 from .base import CrudMixin

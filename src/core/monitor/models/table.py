@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from core.common.drivers.column import Column, ColumnDataType
-from core.common.drivers.dialect import Dialect
+from core.common.drivers.base import BaseDialect
 
 from . import MonitorDefinition, MonitorConfiguration
 from .base import Monitor
@@ -124,7 +124,7 @@ class ColumnMetric(MetricBase):
     def alias(self):
         return "{}__{}".format(self.column, self.type.value)
 
-    def compile(self, dialect: Dialect):
+    def compile(self, dialect: BaseDialect):
         alias = self.alias()
         column = self.column
 

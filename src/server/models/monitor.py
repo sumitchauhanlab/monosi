@@ -3,7 +3,7 @@ from typing import Any, Dict
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, Text, func
 import json
 
-from core.common.drivers import DriverConfig
+from core.common.drivers.base import BaseDriverConfiguration
 from core.monitor.models import MonitorDefinition
 from core.monitor.models.schedule import Schedule
 from core.monitor.tasks.run import RunMonitorTask
@@ -20,7 +20,7 @@ from .datasource import Datasource
 
 @dataclass
 class Workspace:
-    datasources: Dict[str, DriverConfig]
+    datasources: Dict[str, BaseDriverConfiguration]
     name: str = "default"
 
     @classmethod
@@ -46,9 +46,8 @@ class Workspace:
             except:
                 pass
             # ds_config = json.loads(definition.configuration)
-            data = cls.retrieve_data(ds_config)
             # cls.validate(data)
-            config = cls.from_dict(data)
+            config = cls.from_dict(ds_config)
         except Exception as e:
             raise e
 

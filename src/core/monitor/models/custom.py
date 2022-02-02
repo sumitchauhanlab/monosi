@@ -5,7 +5,7 @@ from typing import Any, List, Dict
 import json
 import operator as py_operator
 
-from core.common.drivers.dialect import Dialect
+from core.common.drivers.base import BaseDialect
 
 from . import MonitorConfiguration, MonitorDefinition
 from .base import Monitor
@@ -122,7 +122,7 @@ class CustomMetric(MetricBase):
     		'thresholds': [threshold.to_dict() for threshold in self.metric.thresholds],
     	}
 
-    def compile(self, dialect: Dialect):
+    def compile(self, dialect: BaseDialect):
         return self.sql
 
 def extract_or_default(obj, key, default):

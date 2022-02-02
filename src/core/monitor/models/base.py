@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from core.common.drivers import DriverConfig
+from core.common.drivers.base import BaseDriverConfiguration
 
 from .schedule import Schedule
 
@@ -11,7 +11,7 @@ class Monitor:
     name: str
     description: Optional[str]
     enabled: bool
-    driver_config: DriverConfig
+    driver_config: BaseDriverConfiguration
     schedule: Schedule
     # type via polymorphism
 

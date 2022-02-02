@@ -3,24 +3,20 @@ from dataclasses import dataclass
 from core.common.drivers.base import BaseDriverConfiguration
 
 @dataclass
-class SnowflakeDriverConfiguration(BaseDriverConfiguration):
+class PostgresDriverConfiguration(BaseDriverConfiguration):
     user: str
     password: str
-    warehouse: str
+    host: str
     database: str
-    account: str
-
-    def driver_name(self):
-        return "snowflake"
-
-    def configuration_schema(self):
-        return {}
+    port: int = 5432
 
     def connection_string(self) -> str:
-        return 'snowflake://{user}:{password}@{account}/'.format(
+        return 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
             user=self.user,
             password=self.password,
-            account=self.account,
+            host=self.host,
+            port=self.port,
+            database=self.database,
         )
 
     @classmethod
@@ -28,16 +24,16 @@ class SnowflakeDriverConfiguration(BaseDriverConfiguration):
         return cls(
             user=config_dict.get('user'),
             password=config_dict.get('password'),
-            warehouse=config_dict.get('warehouse'),
             database=config_dict.get('database'),
-            account=config_dict.get('account'),
+            host=config_dict.get('host'),
+            port=config_dict.get('port'),
         )
 
     def to_dict(self):
         return {
             'user': self.user,
-            'warehouse': self.warehouse,
             'database': self.database,
-            'account': self.account,
+            'host': self.host,
+            'port': self.port,
         }
     

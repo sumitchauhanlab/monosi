@@ -2,14 +2,14 @@ from dataclasses import dataclass
 from typing import Any, List
 
 from core.common.drivers.column import Table
-from core.common.drivers.dialect import Dialect
+from core.common.drivers.base import BaseDialect
 
 from core.monitor.models.metrics import MetricBase
 from core.monitor.models.table import TableMonitor, ColumnMetric, ColumnMetricType
 
 @dataclass
 class Compiler:
-    dialect: Dialect
+    dialect: BaseDialect
     metadata: Any
 
     @staticmethod

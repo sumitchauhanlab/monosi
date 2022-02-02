@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from core.common.drivers.dialect import Dialect
+from core.common.drivers.base import BaseDialect
 from core.common.drivers.column import Column
 
 from . import MonitorConfiguration, MonitorDefinition
@@ -68,7 +68,7 @@ class SchemaMetric(MetricBase):
             col_to_metric=col_to_metric_map,
         )
 
-    def compile(self, dialect: Dialect):
+    def compile(self, dialect: BaseDialect):
         return ""
 
 @dataclass

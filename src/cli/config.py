@@ -3,7 +3,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple
 
-from core.common.drivers import DriverConfig
+from core.common.drivers.base import BaseDriverConfiguration
 from core.common.drivers.factory import load_config
 import core.common.events as events
 
@@ -34,7 +34,7 @@ def convert_to_bool(val):
 
 @dataclass
 class WorkspaceConfiguration:
-    sources: Dict[str, DriverConfig] = field(default_factory=list())
+    sources: Dict[str, BaseDriverConfiguration] = field(default_factory=list())
     name: str = "default"
     send_anonymous_stats: bool = True
     workspaces_dir: str = DEFAULT_WORKSPACES_DIR # TODO: Update to args
@@ -49,7 +49,6 @@ class WorkspaceConfiguration:
         driver_type = source_dict.pop('type')
         try:
             cls = load_config(driver_type)
-            # cls.validate(data)
             config = cls.from_dict(source_dict)
         except Exception as e:
             raise e

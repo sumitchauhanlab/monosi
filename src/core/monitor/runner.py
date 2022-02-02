@@ -20,7 +20,7 @@ class Runner:
         if self.driver is None:
             raise Exception("Initialize runner before execution.")
 
-        results = self.driver.execute_sql(sql)
+        results = self.driver.execute(sql)
         return results
 
     def run(self, sql: str):

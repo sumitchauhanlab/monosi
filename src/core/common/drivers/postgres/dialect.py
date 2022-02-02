@@ -1,6 +1,6 @@
 from core.common.drivers.base import BaseDialect
 
-class SnowflakeDialect(BaseDialect):
+class PostgresDialect(BaseDialect):
     @classmethod
     def text_int_rate(cls):
         return "SUM(IFF(REGEXP_COUNT(TO_VARCHAR({}), '^([-+]?[0-9]+)$', 1, 'i') != 0, 1, 0)) / CAST(COUNT(*) AS NUMERIC)"
