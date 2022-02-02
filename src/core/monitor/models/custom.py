@@ -165,7 +165,7 @@ class CustomMonitor(Monitor):
             'type': 'custom',
         }
 
-    def base_sql_statement(self, select_sql):
+    def base_sql_statement(self, select_sql, dialect):
         return "WITH custom_metric AS ({select_sql}) SELECT 1 AS custom FROM custom_metric".format(select_sql=select_sql)
 
     @classmethod

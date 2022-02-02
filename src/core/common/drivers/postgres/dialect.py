@@ -32,3 +32,27 @@ class PostgresDialect(BaseDialect):
     @classmethod
     def completeness(cls):
         return "COUNT({}) / CAST(COUNT(*) AS NUMERIC)"
+
+    @classmethod
+    def metadata_query(cls):
+        return """
+        SELECT
+            lower(c.table_name) AS name,
+            lower(c.column_name) AS COL_NAME,
+            lower(c.data_type) AS COL_TYPE,
+            ordinal_position AS COL_SORT_ORDER, 
+            lower(c.table_catalog) AS database,
+            lower(c.table_schema) AS schema
+        FROM
+            INFORMATION_SCHEMA.COLUMNS AS c
+        LEFT JOIN
+            INFORMATION_SCHEMA.TABLES t
+                ON c.TABLE_NAME = t.TABLE_NAME
+                AND c.TABLE_SCHEMA = t.TABLE_SCHEMA
+        WHERE LOWER( name ) = '{table_name}'
+          AND LOWER( schema ) = '{schema_name}'
+          AND LOWER( database ) = '{database_name}'"""
+
+    @classmethod
+    def table_query(cls):
+        raise NotImplementedError # TODO

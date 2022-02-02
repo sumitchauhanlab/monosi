@@ -49,7 +49,7 @@ class Compiler:
             self._add_cols(monitor)
 
         select_sql = self.compile_select(monitor.retrieve_metrics())
-        sql = monitor.base_sql_statement(select_sql)
+        sql = monitor.base_sql_statement(select_sql, self.dialect)
         
         return sql
 

@@ -150,28 +150,8 @@ class SchemaMonitor(SchemaMonitorConfigurationDefaults, Monitor, SchemaMonitorCo
 
         return table_parts[2].lower()
 
-    def base_sql_statement(self, select_sql):
-        database_name = "SNOWFLAKE_SAMPLE_DATA"
-
-        return """
-        SELECT
-            lower(c.table_name) AS name,
-            lower(c.column_name) AS col_name,
-            lower(c.data_type) AS col_type,
-            c.comment AS col_description,
-            lower(c.ordinal_position) AS col_sort_order,
-            lower(c.table_catalog) AS database,
-            lower(c.table_schema) AS schema,
-            t.comment AS description,
-            decode(lower(t.table_type), 'view', 'true', 'false') AS is_view
-        FROM
-            {database_name}.INFORMATION_SCHEMA.COLUMNS AS c
-        LEFT JOIN
-            {database_name}.INFORMATION_SCHEMA.TABLES t
-                ON c.TABLE_NAME = t.TABLE_NAME
-                AND c.TABLE_SCHEMA = t.TABLE_SCHEMA
-        WHERE LOWER( name ) = '{table_name}'
-          AND LOWER( schema ) = '{schema_name}'""".format(
+    def base_sql_statement(self, select_sql, dialect):
+        return dialect.metadata_query().format(
                 database_name=self.database_name(),
                 schema_name = self.schema_name(),
                 table_name=self.table_name())

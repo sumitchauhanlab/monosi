@@ -143,25 +143,8 @@ class TableMonitor(TableMonitorConfigurationDefaults, Monitor, TableMonitorConfi
     metrics: List[ColumnMetricType] = field(default_factory=lambda: ColumnMetricType.all())
     columns: List[Column] = field(default_factory=list)
 
-    # TODO: BASE_SQL should be delegated to Dialect
-    BASE_SQL = """
-    SELECT 
-        DATE_TRUNC('HOUR', {timestamp_field}) as window_start, 
-        DATEADD(hr, 1, DATE_TRUNC('HOUR', {timestamp_field})) as window_end, 
-
-        COUNT(*) as row_count, 
-
-        {select_sql}
-
-    FROM {table}
-    WHERE 
-        DATE_TRUNC('HOUR', {timestamp_field}) >= DATEADD(day, {days_ago}, CURRENT_TIMESTAMP()) 
-    GROUP BY window_start, window_end 
-    ORDER BY window_start ASC;
-    """
-
-    def base_sql_statement(self, select_sql):
-        return TableMonitor.BASE_SQL.format(
+    def base_sql_statement(self, select_sql, dialect):
+        return dialect.table_query().format(
             select_sql=select_sql,
             table=self.table,
             timestamp_field=self.timestamp_field,

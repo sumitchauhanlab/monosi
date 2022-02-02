@@ -128,6 +128,5 @@ class PostgresDriver(BaseSqlAlchemyDriver):
 
         results = self.execute(DATABASE_METADATA_SQL)
         filtered_results = self._filter_metadata(results)
-        print(filtered_results)
 
         return filtered_results
