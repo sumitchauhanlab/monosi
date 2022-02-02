@@ -11,6 +11,7 @@ class Reporter:
         self.listeners = {}
         self.start_time = None
         self.stop_time = None
+        self.monitor = None
         self.monitor_finished_time = None
 
         formatter = ProgressFormatter()
@@ -25,6 +26,7 @@ class Reporter:
         return list(self.listeners[notification])
 
     def monitor_started(self, monitor):
+        self.monitor = monitor
         self.start()
         self.notify(NotificationType.MONITOR_STARTED, monitor)
 
@@ -35,6 +37,7 @@ class Reporter:
         self.start_time = None
         self.stop_time = None
         self.monitor_finished_time = None
+        self.monitor = None
 
     def monitor_finished(self, monitor):
         self.monitor_finished_time = time()
@@ -95,6 +98,7 @@ class Reporter:
             'test_count': len(self.tests),
             'total_time': self._total_time(),
             'load_time': self._load_time(),
+            'monitor': self.monitor,
         }
 
         self.notify(NotificationType.START_DUMP)

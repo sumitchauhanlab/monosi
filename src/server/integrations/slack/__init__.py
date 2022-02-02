@@ -38,18 +38,31 @@ class SlackIntegration(IntegrationDefinition):
             raise Exception("Request to Slack webhook URL {} failed.".format(url))
 
     def dump_failures(self, failed_tests):
-        if len(failed_tests) > 0:
-            message = ""
-            message += "\nFailures\n"
-
-            for failed_test in failed_tests:
-                message += "\tAnomalies: {}\n".format(len(failed_test.anomalies()))
-                message += "\n"
-
-            self.write(message)
-
-    def dump_summary(self, none_obj):
         pass
+        # if len(failed_tests) > 0:
+        #     message = ""
+        #     message += "\nFailures\n"
+
+        #     for failed_test in failed_tests:
+        #         message += "\tAnomalies: {}\n".format(len(failed_test.anomalies()))
+        #         message += "\n"
+
+        #     self.write(message)
+
+    def dump_summary(self, summary):
+        monitor = summary['monitor']
+
+        message = ""
+        message += "Monitor: {monitor_name}".format(monitor_name=monitor.name)
+        if monitor.description:
+            message += "\nDescription: {monitor_description}".format(monitor_description=monitor.description)
+        message += "\n"
+        
+        message += "\nTotal Metrics: {}".format(summary['test_count'])
+        message += "\nFailed Metrics: {}".format(summary['failed_count'])
+        message += "\nTotal Time: {}, SQL Load Time: {}".format(summary['total_time'], summary['load_time'])
+        message += "\n\nAnomaly details coming soon to slack integration."
+        self.write(message)
 
     def dump_pending(self, none_obj):
         pass
@@ -58,7 +71,7 @@ class SlackIntegration(IntegrationDefinition):
         pass
 
     def monitor_started(self, none_obj):
-        self.write("A monitor is running!")
+        pass
 
     def monitor_finished(self, none_obj):
         pass
