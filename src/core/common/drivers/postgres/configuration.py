@@ -10,6 +10,9 @@ class PostgresDriverConfiguration(BaseDriverConfiguration):
     database: str
     port: int = 5432
 
+    def driver_name(self):
+        return "postgres"
+
     def connection_string(self) -> str:
         return 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
             user=self.user,

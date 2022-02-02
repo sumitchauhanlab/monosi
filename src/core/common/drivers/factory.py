@@ -1,3 +1,4 @@
+import core.common.drivers.postgres
 import core.common.drivers.snowflake
 
 from .base import BaseDriverConfiguration
@@ -6,8 +7,8 @@ class DriverFactory:
     def __init__(self):
         self._drivers = {}
 
+        self._drivers['postgres'] = core.common.drivers.postgres
         self._drivers['snowflake'] = core.common.drivers.snowflake
-        # self._drivers['postgres'] = core.common.drivers.postgres
         # for entry_point in pkg_resources.iter_entry_points('monosi_drivers'):
         #     self._drivers[entry_point.name] = entry_point.load()
 

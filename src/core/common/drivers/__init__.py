@@ -1,43 +1,43 @@
-import abc
-from dataclasses import dataclass
-from typing import List, Optional, Type
+# import abc
+# from dataclasses import dataclass
+# from typing import List, Optional, Type
 
-from .column import Column
-from .dialect import Dialect
+# from .column import Column
+# from .dialect import Dialect
 
-@dataclass
-class DriverConfig:
-    name: str = "default" # TODO: Force naming
-    schema: Optional[str] = None
-    database: Optional[str] = None
+# @dataclass
+# class DriverConfig:
+#     name: str = "default" # TODO: Force naming
+#     schema: Optional[str] = None
+#     database: Optional[str] = None
 
-    @abc.abstractmethod
-    def to_dict(self):
-        raise NotImplementedError
+#     @abc.abstractmethod
+#     def to_dict(self):
+#         raise NotImplementedError
 
-    @abc.abstractmethod
-    def from_dict(self, config_dict):
-        raise NotImplementedError
+#     @abc.abstractmethod
+#     def from_dict(self, config_dict):
+#         raise NotImplementedError
 
-class DriverDefinition:
-    name: str = "default"
-    type: str
-    configuration: str # DriverConfig
+# class DriverDefinition:
+#     name: str = "default"
+#     type: str
+#     configuration: str # DriverConfig
 
-    def to_dict(self):
-        return {
-            'name': self.name,
-            'type': self.type,
-            'configuration': self.configuration,
-        }
+#     def to_dict(self):
+#         return {
+#             'name': self.name,
+#             'type': self.type,
+#             'configuration': self.configuration,
+#         }
 
-    @classmethod
-    def from_dict(cls, driver_dict):
-        return cls(
-            name=driver_dict['name'],
-            type=driver_dict['type'],
-            configuration=driver_dict['configuration'],
-        )
+#     @classmethod
+#     def from_dict(cls, driver_dict):
+#         return cls(
+#             name=driver_dict['name'],
+#             type=driver_dict['type'],
+#             configuration=driver_dict['configuration'],
+#         )
 
 # class BaseDriver:
 #     dialect: Type[Dialect]

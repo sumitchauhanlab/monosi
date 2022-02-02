@@ -101,7 +101,7 @@ class BaseDriver:
             column_name = "{}{}".format(name, (column_count[name] if curr_count else ''))
             column_names.append(column_name)
 
-            columns.append(Column(column_name, column_type))
+            columns.append(Column(column_name.upper(), column_type))
 
         return columns
 
