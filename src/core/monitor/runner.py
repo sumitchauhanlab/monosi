@@ -13,7 +13,8 @@ class Runner:
             driver_cls = load_driver(self.config)
 
             self.driver = driver_cls(self.config)
-        except:
+        except Exception as e:
+            print(e)
             raise Exception("Could not initialize connection to database in Runner.")
 
     def _execute(self, sql: str):

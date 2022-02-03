@@ -56,11 +56,11 @@ class SlackIntegration(IntegrationDefinition):
         message += "Monitor: {monitor_name}".format(monitor_name=monitor.name)
         if monitor.description:
             message += "\nDescription: {monitor_description}".format(monitor_description=monitor.description)
+        message += "\nTotal Time: {} seconds, SQL Load Time: {} seconds".format(summary['total_time'], summary['load_time'])
         message += "\n"
         
         message += "\nTotal Metrics: {}".format(summary['test_count'])
         message += "\nFailed Metrics: {}".format(summary['failed_count'])
-        message += "\nTotal Time: {}, SQL Load Time: {}".format(summary['total_time'], summary['load_time'])
         message += "\n\nAnomaly details coming soon to slack integration."
         self.write(message)
 

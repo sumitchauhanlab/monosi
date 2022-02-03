@@ -8,6 +8,7 @@ class SnowflakeDriverConfiguration(BaseDriverConfiguration):
     password: str
     warehouse: str
     database: str
+    # schema: str
     account: str
 
     def driver_name(self):
@@ -17,10 +18,13 @@ class SnowflakeDriverConfiguration(BaseDriverConfiguration):
         return {}
 
     def connection_string(self) -> str:
-        return 'snowflake://{user}:{password}@{account}/'.format(
+        # /<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
+        return 'snowflake://{user}:{password}@{account}/{database}?warehouse={warehouse}'.format(
             user=self.user,
             password=self.password,
             account=self.account,
+            database=self.database,
+            warehouse=self.warehouse,
         )
 
     @classmethod

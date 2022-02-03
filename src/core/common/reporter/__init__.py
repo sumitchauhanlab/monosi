@@ -26,8 +26,8 @@ class Reporter:
         return list(self.listeners[notification])
 
     def monitor_started(self, monitor):
-        self.monitor = monitor
         self.start()
+        self.monitor = monitor
         self.notify(NotificationType.MONITOR_STARTED, monitor)
 
     def _reset(self):

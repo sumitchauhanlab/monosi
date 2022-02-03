@@ -41,7 +41,7 @@ class Compiler:
     def _add_cols(self, monitor: TableMonitor):
         tables = Table.from_metadata(self.metadata)
         for table in tables:
-            if table.name.lower() in monitor.table:
+            if table.name.lower() in monitor.table.lower():
                 monitor.columns = table.columns
 
     def compile(self, monitor):
