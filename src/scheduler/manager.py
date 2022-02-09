@@ -1,6 +1,8 @@
 import logging
 from flask_restful import Api
 
+from scheduler.models.execution import Execution
+
 from .job import MonitorJob
 from .base import MsiScheduler
 from .handlers import init_api
@@ -59,6 +61,12 @@ class JobManager:
         return self.scheduler.get_jobs()
 
     def remove_job(self, job_id):
+        if self.app:
+            try:
+                with self.app.app_context():
+                    Execution.delete_by_job_id(job_id)
+            except:
+                logging.warn("Could not find or could not delete executions.")
         return self.scheduler.remove_job(job_id)
 
     def resume_job(self, job_id):

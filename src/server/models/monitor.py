@@ -134,8 +134,9 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
 
     def create(self):
         try:
+            monitor = super().create()
             self.schedule()
-            return super().create()
+            return monitor
         except:
             raise Exception("There was an issue scheduling the monitor during creation.")
         # self.run()
@@ -143,7 +144,6 @@ class Monitor(MonitorDefinition, Base, CrudMixin):
     def delete(self):
         try:
             manager.remove_job(str(self.id))
-            Execution.delete_by_job_id(self.id)
             return super().delete()
         except:
             raise Exception("There was an issue removing a scheduled job and could not delete monitor.")

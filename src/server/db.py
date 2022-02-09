@@ -3,7 +3,7 @@ from flask_sqlalchemy import BaseQuery, SQLAlchemy
 from .models import Base
 
 class MsiQuery(BaseQuery):
-    def get_by_id(cls, ident, default=None):
+    def get_by_id(self, ident, default=None):
         return self.get(ident) or default
 
     # def all(cls):

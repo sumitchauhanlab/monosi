@@ -20,7 +20,7 @@ class Execution(db.Model):
 
     @classmethod
     def delete_by_job_id(cls, _id):
-        db.session.delete(cls.query.filter(cls.job_id == _id))
+        db.session.delete(cls.query.filter(cls.job_id == int(_id)))
         db.session.commit()
         
     def create(self):
